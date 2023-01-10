@@ -1,4 +1,6 @@
-# Sample Hardhat Project
+# Web3 Ticken
+
+Doc: https://uqmdrqi3zu.feishu.cn/docx/Oe5wd4ZC9omaDMxZyRicNQjqn8b
 
 This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
 
