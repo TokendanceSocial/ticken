@@ -16,7 +16,10 @@ specifiers:
   chai: ^4.3.7
   dotenv: ^16.0.3
   ethers: ^5.7.2
+  form-data: ^4.0.0
+  get-file-object-from-local-path: ^1.0.2
   hardhat: ^2.12.5
+  mime-types: ^2.1.35
   nft.storage: ^7.0.0
   ts-node: ^10.9.1
   typescript: ^4.9.4
@@ -25,6 +28,7 @@ dependencies:
   '@openzeppelin/contracts-upgradeable': 4.8.0
   '@types/axios': 0.14.0
   dotenv: 16.0.3
+  form-data: 4.0.0
   nft.storage: 7.0.0_node-fetch@3.3.0
 
 devDependencies:
@@ -40,7 +44,9 @@ devDependencies:
   axios: 1.2.2
   chai: 4.3.7
   ethers: 5.7.2
+  get-file-object-from-local-path: 1.0.2
   hardhat: 2.12.5_z6wznmtyb6ovnulj6iujpct7um
+  mime-types: 2.1.35
   ts-node: 10.9.1_awa2wsr5thmg3i7jqycphctjfq
   typescript: 4.9.4
 
@@ -1510,7 +1516,7 @@ packages:
   /axios/1.2.2:
     resolution: {integrity: sha512-bz/J4gS2S3I7mpN/YZfGFTqhXTYzRho8Ay38w2otuuDR322KzFIWm/4W2K6gIwvWaws5n+mnb7D1lN9uD+QH6Q==}
     dependencies:
-      follow-redirects: 1.15.2
+      follow-redirects: 1.15.2_debug@4.3.4
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -2604,15 +2610,6 @@ packages:
     hasBin: true
     dev: true
 
-  /follow-redirects/1.15.2:
-    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-
   /follow-redirects/1.15.2_debug@4.3.4:
     resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
     engines: {node: '>=4.0'}
@@ -2623,7 +2620,6 @@ packages:
         optional: true
     dependencies:
       debug: 4.3.4
-    dev: true
 
   /for-each/0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
@@ -2758,6 +2754,12 @@ packages:
   /get-caller-file/2.0.5:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
     engines: {node: 6.* || 8.* || >= 10.*}
+    dev: true
+
+  /get-file-object-from-local-path/1.0.2:
+    resolution: {integrity: sha512-gTOXvcQkzj5kDtLj4ELMYWWbuy+ufMf/c47q4yQ0JsHGaOrtq3lC5koM0hHkeUoSGkezVUb86zAERDpZi9aaXA==}
+    dependencies:
+      mime-types: 2.1.35
     dev: true
 
   /get-func-name/2.0.0:

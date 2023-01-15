@@ -2,13 +2,17 @@
 
 ## How to run
 
-### File Related
+### 1. File Related
 
 Add your NFT.Storage API Key in .env like
 
 `storage_token = <API-KEY>`
 
-Run `npx hardhat run ./scripts/upload_file.ts`
+### 2. Upload File
+
+Change filepath in `./scripts/upload_file.ts`, and run it with `npx hardhat run ./scripts/upload_file.ts`.
+
+CID will show on stdout.
 
 ## Reference
 

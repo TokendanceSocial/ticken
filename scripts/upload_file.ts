@@ -1,22 +1,25 @@
-import { client } from "../base/ipfs_client";
 import axios from "axios";
+import FormData from "form-data";
+import { createReadStream } from "fs";
 
-var config = {
-  method: "get",
-  url: "https://bafkreiba24ke767pgmvxs7gx2knsvgqrev477ywknya6d2esqidkhn4sw4.ipfs.nftstorage.link",
-  headers: {},
-};
+const configPath = "./scripts/metadata.json";
+function genConfig(path: string) {
+  var data = new FormData();
+  data.append("file", createReadStream(path));
+
+  return {
+    method: "post",
+    url: "https://api.nft.storage/upload",
+    headers: {
+      Authorization: `Bearer ${process.env.storage_token}`,
+      ...data.getHeaders(),
+    },
+    data: data,
+  };
+}
 
 async function main() {
-  const cid = "bafkreiba24ke767pgmvxs7gx2knsvgqrev477ywknya6d2esqidkhn4sw4";
-  console.log(await client.check(cid));
-  axios(config)
-    .then(function (response) {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  genConfig(configPath);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
