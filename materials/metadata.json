@@ -2,5 +2,6 @@
     "name":"活动名",
     "description":"活动描述",
     "external_url":"https://tokendance.xyz/v2",
-    "location":""
+    "location":"活动地点",
+    "image": "./materials/test-cover.png"
 }
