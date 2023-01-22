@@ -57,14 +57,14 @@ export declare namespace Event {
     tokenId: PromiseOrValue<BigNumberish>;
     canInvite: PromiseOrValue<boolean>;
     isSigned: PromiseOrValue<boolean>;
-    isSignMan: PromiseOrValue<boolean>;
+    isSigner: PromiseOrValue<boolean>;
   };
 
   export type UserInfoStructOutput = [BigNumber, boolean, boolean, boolean] & {
     tokenId: BigNumber;
     canInvite: boolean;
     isSigned: boolean;
-    isSignMan: boolean;
+    isSigner: boolean;
   };
 
   export type AllInfoStruct = {
@@ -80,6 +80,7 @@ export declare namespace Event {
 
 export interface EventInterface extends utils.Interface {
   functions: {
+    "addSigner(address)": FunctionFragment;
     "allUserInfo(address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -94,6 +95,7 @@ export interface EventInterface extends utils.Interface {
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
+    "sign(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenByIndex(uint256)": FunctionFragment;
@@ -106,6 +108,7 @@ export interface EventInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "addSigner"
       | "allUserInfo"
       | "approve"
       | "balanceOf"
@@ -120,6 +123,7 @@ export interface EventInterface extends utils.Interface {
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
+      | "sign"
       | "supportsInterface"
       | "symbol"
       | "tokenByIndex"
@@ -130,6 +134,10 @@ export interface EventInterface extends utils.Interface {
       | "transferOwnership"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "addSigner",
+    values: [PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(
     functionFragment: "allUserInfo",
     values: [PromiseOrValue<string>]
@@ -190,6 +198,10 @@ export interface EventInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
   encodeFunctionData(
+    functionFragment: "sign",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
@@ -223,6 +235,7 @@ export interface EventInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
 
+  decodeFunctionResult(functionFragment: "addSigner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "allUserInfo",
     data: BytesLike
@@ -258,6 +271,7 @@ export interface EventInterface extends utils.Interface {
     functionFragment: "setApprovalForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "sign", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
@@ -373,6 +387,11 @@ export interface Event extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    addSigner(
+      a: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     allUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -444,6 +463,11 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    sign(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -481,6 +505,11 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
+
+  addSigner(
+    a: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   allUserInfo(
     user: PromiseOrValue<string>,
@@ -553,6 +582,11 @@ export interface Event extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  sign(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   supportsInterface(
     interfaceId: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
@@ -591,6 +625,11 @@ export interface Event extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    addSigner(
+      a: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     allUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -657,6 +696,11 @@ export interface Event extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    sign(
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -743,6 +787,11 @@ export interface Event extends BaseContract {
   };
 
   estimateGas: {
+    addSigner(
+      a: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     allUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -814,6 +863,11 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    sign(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -853,6 +907,11 @@ export interface Event extends BaseContract {
   };
 
   populateTransaction: {
+    addSigner(
+      a: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     allUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -921,6 +980,11 @@ export interface Event extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    sign(
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
     // Mapping owner address to token id
     mapping(address => uint256) private owner2tokenId;
+    mapping(address => bool) private signer;
+    mapping(uint256 => bool) private tokenSigned;
     uint256 private count;
 
     struct BasicInfo {
@@ -23,7 +25,7 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
         uint256 tokenId;
         bool canInvite;
         bool isSigned;
-        bool isSignMan;
+        bool isSigner;
     }
 
     struct AllInfo {
@@ -32,6 +34,18 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
     }
 
     BasicInfo private info;
+
+    modifier onlySigner() {
+        if (signer[msg.sender]) {
+            _;
+        }
+    }
+
+    modifier notSigned(uint256 tokenID) {
+        if (!tokenSigned[tokenID]) {
+            _;
+        }
+    }
 
     constructor(
         string memory name_,
@@ -56,15 +70,17 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
     function allUserInfo(address user) public view returns (AllInfo memory) {
         UserInfo memory userInfo;
         userInfo.canInvite = true;
-        userInfo.isSigned = false;
-        userInfo.isSignMan = false;
         userInfo.tokenId = this.tokenOfOwnerByIndex(user, 0);
+        userInfo.isSigned = tokenSigned[userInfo.tokenId];
+        userInfo.isSigner = signer[user];
 
         AllInfo memory allInfo;
         allInfo.basic = info;
         allInfo.user = userInfo;
         return allInfo;
     }
+
+    // ==== mint function ===//
 
     function batchMint(address[] memory to) public onlyOwner {
         for (uint256 i = 0; i < to.length; ) {
@@ -79,6 +95,8 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
         uint256 id = counterAfterIncrease();
         _safeMint(to, id);
     }
+
+    // === state transfer function === //
 
     function _beforeTokenTransfer(
         address from,
@@ -110,6 +128,8 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
         count = count + 1;
         return count;
     }
+
+    // === NFT info function ===//
 
     /**
      * @dev Returns the total amount of tokens stored by the contract.
@@ -144,5 +164,16 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
     ) public view virtual override returns (string memory) {
         _requireMinted(tokenId);
         return info.metaURL;
+    }
+
+    // === sign function ===//
+
+    function addSigner(address a) public onlyOwner {
+        signer[a] = true;
+    }
+
+    function sign(uint256 tokenId) public onlySigner notSigned(tokenId) {
+        _requireMinted(tokenId);
+        tokenSigned[tokenId] = true;
     }
 }

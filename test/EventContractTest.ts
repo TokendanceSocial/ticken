@@ -67,7 +67,7 @@ describe("Event Contract", () => {
       const allInfo = await event.allUserInfo(owner.address);
       expect(allInfo.user.tokenId).to.equal(0);
       expect(allInfo.user.canInvite).to.equal(true);
-      expect(allInfo.user.isSignMan).to.equal(false);
+      expect(allInfo.user.isSigner).to.equal(false);
       expect(allInfo.user.isSigned).to.equal(false);
     });
     it("get token url", async () => {
