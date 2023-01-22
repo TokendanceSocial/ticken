@@ -32,6 +32,12 @@ const mintToOwner = async (event: Event) => {
   await tx.wait();
 };
 
+const addSignerToOwner = async (event: Event) => {
+  const [owner] = await ethers.getSigners();
+  const tx = await event.addSigner(owner.address);
+  await tx.wait();
+};
+
 describe("Event Contract", () => {
   let event: Event;
   let owner: SignerWithAddress;
@@ -70,18 +76,56 @@ describe("Event Contract", () => {
       expect(allInfo.user.isSigner).to.equal(false);
       expect(allInfo.user.isSigned).to.equal(false);
     });
-    it("get token url", async () => {
+  });
+  describe("Owner Mint", () => {
+    beforeEach(async () => {
       await mintToOwner(event);
+    });
+    it("get token url", async () => {
       const metaURL = await event.tokenURI(1);
       expect(metaURL).to.equal(basic.metaURL);
     });
-  });
-  describe("Owner Mint", () => {
     it("owner has right state", async () => {
-      await mintToOwner(event);
       const allInfo = await event.allUserInfo(owner.address);
       expect(allInfo.user.tokenId).to.equal(1);
       expect(await event.balanceOf(owner.address)).to.equal(1);
+    });
+  });
+  describe("Owner Sign", () => {
+    beforeEach(async () => {
+      mintToOwner(event);
+      addSignerToOwner(event);
+    });
+    it("owner to be signer", async () => {
+      const allInfo = await event.allUserInfo(owner.address);
+      expect(allInfo.user.isSigner).to.equal(true);
+    });
+    it("sign owner ticket", async () => {
+      let allInfo = await event.allUserInfo(owner.address);
+      expect(allInfo.user.isSigned).to.equal(false);
+      const tx = await event.sign(allInfo.user.tokenId);
+      await tx.wait();
+      allInfo = await event.allUserInfo(owner.address);
+      expect(allInfo.user.isSigned).to.equal(true);
+    });
+  });
+  describe("Event close", () => {
+    beforeEach(async () => {
+      const tx = await event.closeEvent();
+      await tx.wait();
+    });
+    it("event has closed", async () => {
+      expect(await event.isClosed()).to.true;
+    });
+    it("cannot mint", async () => {
+      let haveE = false;
+      try {
+        const tx = await event.ownerMint(owner.address);
+        await tx.wait();
+      } catch (e) {
+        haveE = true;
+      }
+      expect(haveE).to.true;
     });
   });
 });

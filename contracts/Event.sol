@@ -11,6 +11,7 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
     mapping(address => bool) private signer;
     mapping(uint256 => bool) private tokenSigned;
     uint256 private count;
+    bool private isCancel;
 
     struct BasicInfo {
         string name;
@@ -35,16 +36,19 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
 
     BasicInfo private info;
 
+    modifier eventActive() {
+        require(!isCancel, "event has been calceled");
+        _;
+    }
+
     modifier onlySigner() {
-        if (signer[msg.sender]) {
-            _;
-        }
+        require(signer[msg.sender], "only signer can sign ticket");
+        _;
     }
 
     modifier notSigned(uint256 tokenID) {
-        if (!tokenSigned[tokenID]) {
-            _;
-        }
+        require(!tokenSigned[tokenID], "token has been signed");
+        _;
     }
 
     constructor(
@@ -80,7 +84,7 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
         return allInfo;
     }
 
-    // ==== mint function ===//
+    // ==== mint function === //
 
     function batchMint(address[] memory to) public onlyOwner {
         for (uint256 i = 0; i < to.length; ) {
@@ -91,7 +95,7 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
         }
     }
 
-    function ownerMint(address to) public onlyOwner {
+    function ownerMint(address to) public onlyOwner eventActive {
         uint256 id = counterAfterIncrease();
         _safeMint(to, id);
     }
@@ -129,7 +133,7 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
         return count;
     }
 
-    // === NFT info function ===//
+    // === NFT info function === //
 
     /**
      * @dev Returns the total amount of tokens stored by the contract.
@@ -166,14 +170,25 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
         return info.metaURL;
     }
 
-    // === sign function ===//
+    // === sign function === //
 
     function addSigner(address a) public onlyOwner {
         signer[a] = true;
     }
 
-    function sign(uint256 tokenId) public onlySigner notSigned(tokenId) {
+    function sign(
+        uint256 tokenId
+    ) public onlySigner notSigned(tokenId) eventActive {
         _requireMinted(tokenId);
         tokenSigned[tokenId] = true;
+    }
+
+    // === close event === //
+    function closeEvent() public onlyOwner {
+        isCancel = true;
+    }
+
+    function isClosed() public view returns (bool) {
+        return isCancel;
     }
 }
