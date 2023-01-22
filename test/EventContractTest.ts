@@ -38,6 +38,11 @@ const addSignerToOwner = async (event: Event) => {
   await tx.wait();
 };
 
+const closeEvent = async (event: Event) => {
+  const tx = await event.closeEvent();
+  await tx.wait();
+};
+
 describe("Event Contract", () => {
   let event: Event;
   let owner: SignerWithAddress;
@@ -53,6 +58,7 @@ describe("Event Contract", () => {
       name: result.name,
       symbol: result.symbol,
       metaURL: result.metaURL,
+      state: 0,
     };
   });
   describe("Contract Deployed", () => {
@@ -68,6 +74,7 @@ describe("Event Contract", () => {
       expect(allInfo.basic.personLimit).to.equal(basic.personLimit);
       expect(allInfo.basic.price).to.equal(basic.price);
       expect(allInfo.basic.metaURL).to.not.empty;
+      expect(allInfo.basic.state).to.equal(0);
     });
     it("user info", async () => {
       const allInfo = await event.allUserInfo(owner.address);
@@ -111,8 +118,7 @@ describe("Event Contract", () => {
   });
   describe("Event close", () => {
     beforeEach(async () => {
-      const tx = await event.closeEvent();
-      await tx.wait();
+      await closeEvent(event);
     });
     it("event has closed", async () => {
       expect(await event.isClosed()).to.true;
@@ -126,6 +132,15 @@ describe("Event Contract", () => {
         haveE = true;
       }
       expect(haveE).to.true;
+    });
+  });
+  describe("Event state", () => {
+    it("Live", async () => {
+      expect(await event.state()).to.equal(0);
+    });
+    it("Close", async () => {
+      await closeEvent(event);
+      expect(await event.state()).to.equal(1);
     });
   });
 });

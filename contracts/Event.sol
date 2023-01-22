@@ -13,6 +13,11 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
     uint256 private count;
     bool private isCancel;
 
+    enum EventState {
+        Live,
+        Close
+    }
+
     struct BasicInfo {
         string name;
         string symbol;
@@ -20,6 +25,7 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
         uint256 personLimit;
         uint256 price;
         string metaURL;
+        EventState state;
     }
 
     struct UserInfo {
@@ -80,11 +86,20 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
 
         AllInfo memory allInfo;
         allInfo.basic = info;
+        allInfo.basic.state = state();
         allInfo.user = userInfo;
         return allInfo;
     }
 
-    // ==== mint function === //
+    // === state function === //
+    function state() public view returns (EventState) {
+        if (isCancel) {
+            return EventState.Close;
+        }
+        return EventState.Live;
+    }
+
+    // === mint function === //
 
     function batchMint(address[] memory to) public onlyOwner {
         for (uint256 i = 0; i < to.length; ) {
