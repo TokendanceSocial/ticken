@@ -7,6 +7,7 @@ specifiers:
   '@nomicfoundation/hardhat-network-helpers': ^1.0.7
   '@nomicfoundation/hardhat-toolbox': ^2.0.0
   '@nomiclabs/hardhat-ethers': ^2.2.1
+  '@openzeppelin/contracts': ^4.8.1
   '@openzeppelin/contracts-upgradeable': ^4.8.0
   '@openzeppelin/hardhat-upgrades': ^1.22.0
   '@types/axios': ^0.14.0
@@ -25,6 +26,7 @@ specifiers:
   typescript: ^4.9.4
 
 dependencies:
+  '@openzeppelin/contracts': 4.8.1
   '@openzeppelin/contracts-upgradeable': 4.8.0
   '@types/axios': 0.14.0
   dotenv: 16.0.3
@@ -845,6 +847,10 @@ packages:
 
   /@openzeppelin/contracts-upgradeable/4.8.0:
     resolution: {integrity: sha512-5GeFgqMiDlqGT8EdORadp1ntGF0qzWZLmEY7Wbp/yVhN7/B3NNzCxujuI77ktlyG81N3CUZP8cZe3ZAQ/cW10w==}
+    dev: false
+
+  /@openzeppelin/contracts/4.8.1:
+    resolution: {integrity: sha512-xQ6eUZl+RDyb/FiZe1h+U7qr/f4p/SrTSQcTPH2bjur3C5DbuW/zFgCU/b1P/xcIaEqJep+9ju4xDRi3rmChdQ==}
     dev: false
 
   /@openzeppelin/hardhat-upgrades/1.22.0_abqxxxa33dmibzvvolsldc3nqe:
