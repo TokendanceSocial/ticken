@@ -1,9 +1,8 @@
 import { ethers } from "hardhat";
-import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Event } from "../typechain-types";
-import { all } from "axios";
 
 const deployEvent = async () => {
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
@@ -11,13 +10,26 @@ const deployEvent = async () => {
   const price = 0;
   const name = "TKD";
   const symbol = "Ticken";
+  const metaURL =
+    "ipfs://bafybeifpeyasqdvrqa5g3cpmttrp3jjnlckrdrwnx5g2deydxlfk27q6zq/metadata.json";
   const [owner] = await ethers.getSigners();
   const Event = await ethers.getContractFactory("Event");
-  const event = await Event.deploy(name, symbol, holdTime, personLimit, price);
+  const event = await Event.deploy(
+    name,
+    symbol,
+    holdTime,
+    personLimit,
+    price,
+    metaURL
+  );
   await event.deployed();
-  const e = ethers.utils.formatEther(await owner.getBalance());
-  console.log(`Using address:${owner.address} with balance: ${e} ETH`);
-  return { event, owner, holdTime, price, personLimit, name, symbol };
+  return { event, owner, holdTime, price, personLimit, name, symbol, metaURL };
+};
+
+const mintToOwner = async (event: Event) => {
+  const [owner] = await ethers.getSigners();
+  const tx = await event.ownerMint(owner.address);
+  await tx.wait();
 };
 
 describe("Event Contract", () => {
@@ -34,6 +46,7 @@ describe("Event Contract", () => {
       personLimit: result.personLimit,
       name: result.name,
       symbol: result.symbol,
+      metaURL: result.metaURL,
     };
   });
   describe("Contract Deployed", () => {
@@ -48,6 +61,7 @@ describe("Event Contract", () => {
       expect(allInfo.basic.holdTime).to.equal(basic.holdTime);
       expect(allInfo.basic.personLimit).to.equal(basic.personLimit);
       expect(allInfo.basic.price).to.equal(basic.price);
+      expect(allInfo.basic.metaURL).to.not.empty;
     });
     it("user info", async () => {
       const allInfo = await event.allUserInfo(owner.address);
@@ -55,6 +69,19 @@ describe("Event Contract", () => {
       expect(allInfo.user.canInvite).to.equal(true);
       expect(allInfo.user.isSignMan).to.equal(false);
       expect(allInfo.user.isSigned).to.equal(false);
+    });
+    it("get token url", async () => {
+      await mintToOwner(event);
+      const metaURL = await event.tokenURI(1);
+      expect(metaURL).to.equal(basic.metaURL);
+    });
+  });
+  describe("Owner Mint", () => {
+    it("owner has right state", async () => {
+      await mintToOwner(event);
+      const allInfo = await event.allUserInfo(owner.address);
+      expect(allInfo.user.tokenId).to.equal(1);
+      expect(await event.balanceOf(owner.address)).to.equal(1);
     });
   });
 });

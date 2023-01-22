@@ -34,6 +34,7 @@ export declare namespace Event {
     holdTime: PromiseOrValue<BigNumberish>;
     personLimit: PromiseOrValue<BigNumberish>;
     price: PromiseOrValue<BigNumberish>;
+    metaURL: PromiseOrValue<string>;
   };
 
   export type BasicInfoStructOutput = [
@@ -41,13 +42,15 @@ export declare namespace Event {
     string,
     BigNumber,
     BigNumber,
-    BigNumber
+    BigNumber,
+    string
   ] & {
     name: string;
     symbol: string;
     holdTime: BigNumber;
     personLimit: BigNumber;
     price: BigNumber;
+    metaURL: string;
   };
 
   export type UserInfoStruct = {

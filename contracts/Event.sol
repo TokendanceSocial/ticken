@@ -16,6 +16,7 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
         uint256 holdTime;
         uint256 personLimit;
         uint256 price;
+        string metaURL;
     }
 
     struct UserInfo {
@@ -40,13 +41,16 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
         // Event person limit, as for total supply for ERC721.
         uint256 pl,
         // Event buy price.
-        uint256 pr
+        uint256 pr,
+        // MetaData URL
+        string memory mu
     ) ERC721(name_, symbol_) {
         info.name = name();
         info.symbol = symbol();
         info.holdTime = ht;
         info.personLimit = pl;
         info.price = pr;
+        info.metaURL = mu;
     }
 
     function allUserInfo(address user) public view returns (AllInfo memory) {
@@ -133,5 +137,12 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
      */
     function tokenByIndex(uint256 index) external view returns (uint256) {
         return index;
+    }
+
+    function tokenURI(
+        uint256 tokenId
+    ) public view virtual override returns (string memory) {
+        _requireMinted(tokenId);
+        return info.metaURL;
     }
 }
