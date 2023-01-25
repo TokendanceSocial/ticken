@@ -128,7 +128,11 @@ describe("Event Contract", () => {
       try {
         const tx = await event.ownerMint(owner.address);
         await tx.wait();
-      } catch (e) {
+      } catch (e: any) {
+        // console.log(Object.keys(e));
+        console.log(
+          e.stackTrace[e.stackTrace.length - 1].message.value.toString()
+        );
         haveE = true;
       }
       expect(haveE).to.true;

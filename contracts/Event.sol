@@ -58,23 +58,23 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
     }
 
     constructor(
-        string memory name_,
-        string memory symbol_,
+        string memory _name,
+        string memory _symbol,
         // Event Hold Time, use secord level timestamp.
-        uint256 ht,
+        uint256 _holdTime,
         // Event person limit, as for total supply for ERC721.
-        uint256 pl,
+        uint256 _personLimit,
         // Event buy price.
-        uint256 pr,
+        uint256 _price,
         // MetaData URL
-        string memory mu
-    ) ERC721(name_, symbol_) {
+        string memory _meta
+    ) ERC721(_name, _symbol) {
         info.name = name();
         info.symbol = symbol();
-        info.holdTime = ht;
-        info.personLimit = pl;
-        info.price = pr;
-        info.metaURL = mu;
+        info.holdTime = _holdTime;
+        info.personLimit = _personLimit;
+        info.price = _price;
+        info.metaURL = _meta;
     }
 
     function allUserInfo(address user) public view returns (AllInfo memory) {
