@@ -25,14 +25,21 @@ import type {
 
 export interface IEventInitailInterface extends utils.Interface {
   functions: {
-    "initialize(uint256)": FunctionFragment;
+    "initialize(string,string,uint256,uint256,uint256,string)": FunctionFragment;
   };
 
   getFunction(nameOrSignatureOrTopic: "initialize"): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>
+    ]
   ): string;
 
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
@@ -68,19 +75,34 @@ export interface IEventInitail extends BaseContract {
 
   functions: {
     initialize(
-      ts: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
   initialize(
-    ts: PromiseOrValue<BigNumberish>,
+    _name: PromiseOrValue<string>,
+    _symbol: PromiseOrValue<string>,
+    _holdTime: PromiseOrValue<BigNumberish>,
+    _personLimit: PromiseOrValue<BigNumberish>,
+    _price: PromiseOrValue<BigNumberish>,
+    _meta: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     initialize(
-      ts: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -89,14 +111,24 @@ export interface IEventInitail extends BaseContract {
 
   estimateGas: {
     initialize(
-      ts: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     initialize(
-      ts: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

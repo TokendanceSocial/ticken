@@ -14,15 +14,11 @@ const deployEvent = async () => {
     "ipfs://bafybeifpeyasqdvrqa5g3cpmttrp3jjnlckrdrwnx5g2deydxlfk27q6zq/metadata.json";
   const [owner] = await ethers.getSigners();
   const Event = await ethers.getContractFactory("Event");
-  const event = await Event.deploy(
-    name,
-    symbol,
-    holdTime,
-    personLimit,
-    price,
-    metaURL
-  );
+  const event = await Event.deploy();
   await event.deployed();
+  await (
+    await event.initialize(name, symbol, holdTime, personLimit, price, metaURL)
+  ).wait();
   return { event, owner, holdTime, price, personLimit, name, symbol, metaURL };
 };
 

@@ -1,21 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./IEventInitial.sol";
 
-contract Event is ERC721URIStorage, Ownable, IERC721Enumerable, IEventInitail {
+contract Event is
+    ERC721URIStorageUpgradeable,
+    OwnableUpgradeable,
+    IERC721EnumerableUpgradeable,
+    IEventInitail
+{
     // Mapping owner address to token id
     mapping(address => uint256) private owner2tokenId;
     mapping(address => bool) private signer;
     mapping(uint256 => bool) private tokenSigned;
     uint256 private count;
     bool private isCancel;
-
-    // temp test
-    uint256 public timestamp;
 
     enum EventState {
         Live,
@@ -61,11 +63,7 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable, IEventInitail {
         _;
     }
 
-    function initialize(uint256 ts) external {
-        timestamp = ts;
-    }
-
-    constructor(
+    function initialize(
         string memory _name,
         string memory _symbol,
         // Event Hold Time, use secord level timestamp.
@@ -76,13 +74,15 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable, IEventInitail {
         uint256 _price,
         // MetaData URL
         string memory _meta
-    ) ERC721(_name, _symbol) {
-        info.name = name();
-        info.symbol = symbol();
+    ) external initializer {
+        info.name = _name;
+        info.symbol = _symbol;
         info.holdTime = _holdTime;
         info.personLimit = _personLimit;
         info.price = _price;
         info.metaURL = _meta;
+        __ERC721_init(_name, _symbol);
+        __Ownable_init();
     }
 
     function allUserInfo(address user) public view returns (AllInfo memory) {

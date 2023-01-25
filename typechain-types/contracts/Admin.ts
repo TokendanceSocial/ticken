@@ -4,6 +4,7 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
   ContractTransaction,
@@ -29,7 +30,7 @@ import type {
 export interface AdminInterface extends utils.Interface {
   functions: {
     "admin()": FunctionFragment;
-    "deployProxy()": FunctionFragment;
+    "deployProxy(string,string,uint256,uint256,uint256,string)": FunctionFragment;
     "logic()": FunctionFragment;
   };
 
@@ -40,7 +41,14 @@ export interface AdminInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "admin", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "deployProxy",
-    values?: undefined
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "logic", values?: undefined): string;
 
@@ -98,6 +106,12 @@ export interface Admin extends BaseContract {
     admin(overrides?: CallOverrides): Promise<[string]>;
 
     deployProxy(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -107,6 +121,12 @@ export interface Admin extends BaseContract {
   admin(overrides?: CallOverrides): Promise<string>;
 
   deployProxy(
+    _name: PromiseOrValue<string>,
+    _symbol: PromiseOrValue<string>,
+    _holdTime: PromiseOrValue<BigNumberish>,
+    _personLimit: PromiseOrValue<BigNumberish>,
+    _price: PromiseOrValue<BigNumberish>,
+    _meta: PromiseOrValue<string>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -115,7 +135,15 @@ export interface Admin extends BaseContract {
   callStatic: {
     admin(overrides?: CallOverrides): Promise<string>;
 
-    deployProxy(overrides?: CallOverrides): Promise<void>;
+    deployProxy(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     logic(overrides?: CallOverrides): Promise<string>;
   };
@@ -129,6 +157,12 @@ export interface Admin extends BaseContract {
     admin(overrides?: CallOverrides): Promise<BigNumber>;
 
     deployProxy(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -139,6 +173,12 @@ export interface Admin extends BaseContract {
     admin(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     deployProxy(
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

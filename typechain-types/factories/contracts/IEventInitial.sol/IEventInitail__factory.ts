@@ -13,9 +13,34 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "string",
+        name: "_name",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_symbol",
+        type: "string",
+      },
+      {
         internalType: "uint256",
-        name: "ts",
+        name: "_holdTime",
         type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_personLimit",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_price",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "_meta",
+        type: "string",
       },
     ],
     name: "initialize",

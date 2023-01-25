@@ -22,10 +22,11 @@ async function deploy_proxy_admin(eventAddress: string) {
   console.log(
     `# Admin Contract Implement: ${await admin.logic()} Admin: ${await admin.admin()} `
   );
+  return admin.address;
 }
 
 async function main() {
-  await deploy_proxy_admin("0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9");
+  await deploy_proxy_admin("0x5FbDB2315678afecb367f032d93F642f64180aa3");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -90,7 +90,7 @@ export interface EventInterface extends utils.Interface {
     "batchMint(address[])": FunctionFragment;
     "closeEvent()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
-    "initialize(uint256)": FunctionFragment;
+    "initialize(string,string,uint256,uint256,uint256,string)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isClosed()": FunctionFragment;
     "name()": FunctionFragment;
@@ -105,7 +105,6 @@ export interface EventInterface extends utils.Interface {
     "state()": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
-    "timestamp()": FunctionFragment;
     "tokenByIndex(uint256)": FunctionFragment;
     "tokenOfOwnerByIndex(address,uint256)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
@@ -138,7 +137,6 @@ export interface EventInterface extends utils.Interface {
       | "state"
       | "supportsInterface"
       | "symbol"
-      | "timestamp"
       | "tokenByIndex"
       | "tokenOfOwnerByIndex"
       | "tokenURI"
@@ -177,7 +175,14 @@ export interface EventInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
@@ -229,7 +234,6 @@ export interface EventInterface extends utils.Interface {
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(functionFragment: "timestamp", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "tokenByIndex",
     values: [PromiseOrValue<BigNumberish>]
@@ -305,7 +309,6 @@ export interface EventInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "timestamp", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "tokenByIndex",
     data: BytesLike
@@ -331,12 +334,14 @@ export interface EventInterface extends utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
+    "Initialized(uint8)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
@@ -364,6 +369,13 @@ export type ApprovalForAllEvent = TypedEvent<
 >;
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -452,7 +464,12 @@ export interface Event extends BaseContract {
     ): Promise<[string]>;
 
     initialize(
-      ts: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -516,8 +533,6 @@ export interface Event extends BaseContract {
     ): Promise<[boolean]>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
-
-    timestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     tokenByIndex(
       index: PromiseOrValue<BigNumberish>,
@@ -586,7 +601,12 @@ export interface Event extends BaseContract {
   ): Promise<string>;
 
   initialize(
-    ts: PromiseOrValue<BigNumberish>,
+    _name: PromiseOrValue<string>,
+    _symbol: PromiseOrValue<string>,
+    _holdTime: PromiseOrValue<BigNumberish>,
+    _personLimit: PromiseOrValue<BigNumberish>,
+    _price: PromiseOrValue<BigNumberish>,
+    _meta: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -650,8 +670,6 @@ export interface Event extends BaseContract {
   ): Promise<boolean>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
-
-  timestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
   tokenByIndex(
     index: PromiseOrValue<BigNumberish>,
@@ -718,7 +736,12 @@ export interface Event extends BaseContract {
     ): Promise<string>;
 
     initialize(
-      ts: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -781,8 +804,6 @@ export interface Event extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
-    timestamp(overrides?: CallOverrides): Promise<BigNumber>;
-
     tokenByIndex(
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -836,6 +857,9 @@ export interface Event extends BaseContract {
       operator?: PromiseOrValue<string> | null,
       approved?: null
     ): ApprovalForAllEventFilter;
+
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
 
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,
@@ -895,7 +919,12 @@ export interface Event extends BaseContract {
     ): Promise<BigNumber>;
 
     initialize(
-      ts: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -959,8 +988,6 @@ export interface Event extends BaseContract {
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
-
-    timestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
     tokenByIndex(
       index: PromiseOrValue<BigNumberish>,
@@ -1030,7 +1057,12 @@ export interface Event extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialize(
-      ts: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _holdTime: PromiseOrValue<BigNumberish>,
+      _personLimit: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      _meta: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1094,8 +1126,6 @@ export interface Event extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    timestamp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     tokenByIndex(
       index: PromiseOrValue<BigNumberish>,
