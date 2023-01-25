@@ -4,14 +4,18 @@ async function deploy_transparent_proxy(adminAddress: string) {
   const admin = await ethers.getContractAt("Admin", adminAddress);
   const tx = await admin.deployProxy();
   const rc = await tx.wait();
-  console.log(rc.events);
-  const event = rc?.events?.find((e) => e.event === "proxy_deployed");
-  console.log(event);
+  let event = rc?.events?.find((e) => e.event === "proxy_deployed");
+  console.log("Proxy deployed", event?.args);
 }
 
 async function main() {
-  // this address maybe
-  await deploy_transparent_proxy("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512");
+  // admin address
+  //   await deploy_transparent_proxy("0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6");
+  const event = await ethers.getContractAt(
+    "Event",
+    "0x94099942864EA81cCF197E9D71ac53310b1468D8"
+  );
+  console.log(await event.timestamp());
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -42,3 +42,5 @@ export type { Admin } from "./contracts/Admin";
 export { Admin__factory } from "./factories/contracts/Admin__factory";
 export type { Event } from "./contracts/Event";
 export { Event__factory } from "./factories/contracts/Event__factory";
+export type { IEventInitail } from "./contracts/IEventInitial.sol/IEventInitail";
+export { IEventInitail__factory } from "./factories/contracts/IEventInitial.sol/IEventInitail__factory";

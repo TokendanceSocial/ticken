@@ -1,17 +1,21 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./IEventInitial.sol";
 
-contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
+contract Event is ERC721URIStorage, Ownable, IERC721Enumerable, IEventInitail {
     // Mapping owner address to token id
     mapping(address => uint256) private owner2tokenId;
     mapping(address => bool) private signer;
     mapping(uint256 => bool) private tokenSigned;
     uint256 private count;
     bool private isCancel;
+
+    // temp test
+    uint256 public timestamp;
 
     enum EventState {
         Live,
@@ -55,6 +59,10 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
     modifier notSigned(uint256 tokenID) {
         require(!tokenSigned[tokenID], "token has been signed");
         _;
+    }
+
+    function initialize(uint256 ts) external {
+        timestamp = ts;
     }
 
     constructor(
@@ -174,7 +182,7 @@ contract Event is ERC721URIStorage, Ownable, IERC721Enumerable {
      * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
      * Use along with {totalSupply} to enumerate all tokens.
      */
-    function tokenByIndex(uint256 index) external view returns (uint256) {
+    function tokenByIndex(uint256 index) external pure returns (uint256) {
         return index;
     }
 
