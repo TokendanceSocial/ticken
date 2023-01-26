@@ -4,6 +4,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "./EventInfo.sol";
 import "./IEventInitial.sol";
 
 contract Event is
@@ -19,34 +20,7 @@ contract Event is
     uint256 private count;
     bool private isCancel;
 
-    enum EventState {
-        Live,
-        Close
-    }
-
-    struct BasicInfo {
-        string name;
-        string symbol;
-        uint256 holdTime;
-        uint256 personLimit;
-        uint256 price;
-        string metaURL;
-        EventState state;
-    }
-
-    struct UserInfo {
-        uint256 tokenId;
-        bool canInvite;
-        bool isSigned;
-        bool isSigner;
-    }
-
-    struct AllInfo {
-        BasicInfo basic;
-        UserInfo user;
-    }
-
-    BasicInfo private info;
+    EventInfo.BasicInfo private info;
 
     modifier eventActive() {
         require(!isCancel, "event has been calceled");
@@ -85,14 +59,35 @@ contract Event is
         __Ownable_init();
     }
 
-    function allUserInfo(address user) public view returns (AllInfo memory) {
-        UserInfo memory userInfo;
+    // determine if a event is ongoing now.
+    // you can call it in Admin directly by code `staticcall(hex"0c362f72")`
+    function isGoing() public view returns (bool) {
+        return !isClosed() && (block.timestamp < eventEndTime());
+    }
+
+    // function isGoingProxy() public view returns (bool) {
+    //     (bool success, bytes memory returndata) = address(this).staticcall(
+    //         hex"0c362f72"
+    //     );
+    //     require(success);
+    //     return abi.decode(returndata, (bool));
+    // }
+
+    // get end time of a event. use 24 hours for default event end duration.
+    function eventEndTime() public view returns (uint256) {
+        return info.holdTime + 26 * 60 * 60;
+    }
+
+    function allUserInfo(
+        address user
+    ) public view returns (EventInfo.AllInfo memory) {
+        EventInfo.UserInfo memory userInfo;
         userInfo.canInvite = true;
         userInfo.tokenId = this.tokenOfOwnerByIndex(user, 0);
         userInfo.isSigned = tokenSigned[userInfo.tokenId];
         userInfo.isSigner = signer[user];
 
-        AllInfo memory allInfo;
+        EventInfo.AllInfo memory allInfo;
         allInfo.basic = info;
         allInfo.basic.state = state();
         allInfo.user = userInfo;
@@ -100,21 +95,25 @@ contract Event is
     }
 
     // === state function === //
-    function state() public view returns (EventState) {
+    function state() public view returns (EventInfo.EventState) {
         if (isCancel) {
-            return EventState.Close;
+            return EventInfo.EventState.Close;
         }
-        return EventState.Live;
+        return EventInfo.EventState.Live;
     }
 
     // === mint function === //
 
     function batchMint(address[] memory to) public onlyOwner {
         for (uint256 i = 0; i < to.length; ) {
-            ownerMint(to[i]);
+            address mintAddr = to[i];
             unchecked {
                 i += 1;
             }
+            if (balanceOf(mintAddr) > 0) {
+                continue;
+            }
+            ownerMint(mintAddr);
         }
     }
 

@@ -27,7 +27,7 @@ import type {
   PromiseOrValue,
 } from "../common";
 
-export declare namespace Event {
+export declare namespace EventInfo {
   export type BasicInfoStruct = {
     name: PromiseOrValue<string>;
     symbol: PromiseOrValue<string>;
@@ -36,6 +36,7 @@ export declare namespace Event {
     price: PromiseOrValue<BigNumberish>;
     metaURL: PromiseOrValue<string>;
     state: PromiseOrValue<BigNumberish>;
+    contractAddress: PromiseOrValue<string>;
   };
 
   export type BasicInfoStructOutput = [
@@ -45,7 +46,8 @@ export declare namespace Event {
     BigNumber,
     BigNumber,
     string,
-    number
+    number,
+    string
   ] & {
     name: string;
     symbol: string;
@@ -54,6 +56,7 @@ export declare namespace Event {
     price: BigNumber;
     metaURL: string;
     state: number;
+    contractAddress: string;
   };
 
   export type UserInfoStruct = {
@@ -71,14 +74,17 @@ export declare namespace Event {
   };
 
   export type AllInfoStruct = {
-    basic: Event.BasicInfoStruct;
-    user: Event.UserInfoStruct;
+    basic: EventInfo.BasicInfoStruct;
+    user: EventInfo.UserInfoStruct;
   };
 
   export type AllInfoStructOutput = [
-    Event.BasicInfoStructOutput,
-    Event.UserInfoStructOutput
-  ] & { basic: Event.BasicInfoStructOutput; user: Event.UserInfoStructOutput };
+    EventInfo.BasicInfoStructOutput,
+    EventInfo.UserInfoStructOutput
+  ] & {
+    basic: EventInfo.BasicInfoStructOutput;
+    user: EventInfo.UserInfoStructOutput;
+  };
 }
 
 export interface EventInterface extends utils.Interface {
@@ -89,10 +95,12 @@ export interface EventInterface extends utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "batchMint(address[])": FunctionFragment;
     "closeEvent()": FunctionFragment;
+    "eventEndTime()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "initialize(string,string,uint256,uint256,uint256,string)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isClosed()": FunctionFragment;
+    "isGoing()": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerMint(address)": FunctionFragment;
@@ -121,10 +129,12 @@ export interface EventInterface extends utils.Interface {
       | "balanceOf"
       | "batchMint"
       | "closeEvent"
+      | "eventEndTime"
       | "getApproved"
       | "initialize"
       | "isApprovedForAll"
       | "isClosed"
+      | "isGoing"
       | "name"
       | "owner"
       | "ownerMint"
@@ -170,6 +180,10 @@ export interface EventInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "eventEndTime",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "getApproved",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -189,6 +203,7 @@ export interface EventInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "isClosed", values?: undefined): string;
+  encodeFunctionData(functionFragment: "isGoing", values?: undefined): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -273,6 +288,10 @@ export interface EventInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "batchMint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "closeEvent", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "eventEndTime",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
@@ -282,6 +301,7 @@ export interface EventInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isClosed", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isGoing", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerMint", data: BytesLike): Result;
@@ -436,7 +456,7 @@ export interface Event extends BaseContract {
     allUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[Event.AllInfoStructOutput]>;
+    ): Promise<[EventInfo.AllInfoStructOutput]>;
 
     approve(
       to: PromiseOrValue<string>,
@@ -457,6 +477,8 @@ export interface Event extends BaseContract {
     closeEvent(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    eventEndTime(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -480,6 +502,8 @@ export interface Event extends BaseContract {
     ): Promise<[boolean]>;
 
     isClosed(overrides?: CallOverrides): Promise<[boolean]>;
+
+    isGoing(overrides?: CallOverrides): Promise<[boolean]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
@@ -573,7 +597,7 @@ export interface Event extends BaseContract {
   allUserInfo(
     user: PromiseOrValue<string>,
     overrides?: CallOverrides
-  ): Promise<Event.AllInfoStructOutput>;
+  ): Promise<EventInfo.AllInfoStructOutput>;
 
   approve(
     to: PromiseOrValue<string>,
@@ -594,6 +618,8 @@ export interface Event extends BaseContract {
   closeEvent(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  eventEndTime(overrides?: CallOverrides): Promise<BigNumber>;
 
   getApproved(
     tokenId: PromiseOrValue<BigNumberish>,
@@ -617,6 +643,8 @@ export interface Event extends BaseContract {
   ): Promise<boolean>;
 
   isClosed(overrides?: CallOverrides): Promise<boolean>;
+
+  isGoing(overrides?: CallOverrides): Promise<boolean>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
@@ -710,7 +738,7 @@ export interface Event extends BaseContract {
     allUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<Event.AllInfoStructOutput>;
+    ): Promise<EventInfo.AllInfoStructOutput>;
 
     approve(
       to: PromiseOrValue<string>,
@@ -729,6 +757,8 @@ export interface Event extends BaseContract {
     ): Promise<void>;
 
     closeEvent(overrides?: CallOverrides): Promise<void>;
+
+    eventEndTime(overrides?: CallOverrides): Promise<BigNumber>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -752,6 +782,8 @@ export interface Event extends BaseContract {
     ): Promise<boolean>;
 
     isClosed(overrides?: CallOverrides): Promise<boolean>;
+
+    isGoing(overrides?: CallOverrides): Promise<boolean>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -913,6 +945,8 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    eventEndTime(overrides?: CallOverrides): Promise<BigNumber>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -935,6 +969,8 @@ export interface Event extends BaseContract {
     ): Promise<BigNumber>;
 
     isClosed(overrides?: CallOverrides): Promise<BigNumber>;
+
+    isGoing(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1051,6 +1087,8 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    eventEndTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1073,6 +1111,8 @@ export interface Event extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     isClosed(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    isGoing(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

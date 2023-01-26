@@ -3,6 +3,7 @@ import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Event } from "../typechain-types";
+import { EventInfo } from "../typechain-types/contracts/Event";
 
 const deployEvent = async () => {
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
@@ -28,6 +29,16 @@ const mintToOwner = async (event: Event) => {
   await tx.wait();
 };
 
+const getAddressList = async (num: number): Promise<string[]> => {
+  const s = await ethers.getSigners();
+  return s.slice(0, num).map((e) => e.address);
+};
+
+const batchMint = async (event: Event, addressList: string[]) => {
+  const tx = await event.batchMint(addressList);
+  await tx.wait();
+};
+
 const addSignerToOwner = async (event: Event) => {
   const [owner] = await ethers.getSigners();
   const tx = await event.addSigner(owner.address);
@@ -42,7 +53,7 @@ const closeEvent = async (event: Event) => {
 describe("Event Contract", () => {
   let event: Event;
   let owner: SignerWithAddress;
-  let basic: Event.BasicInfoStruct;
+  let basic: EventInfo.BasicInfoStruct;
   beforeEach(async () => {
     let result = await loadFixture(deployEvent);
     event = result.event;
@@ -55,6 +66,7 @@ describe("Event Contract", () => {
       symbol: result.symbol,
       metaURL: result.metaURL,
       state: 0,
+      contractAddress: "",
     };
   });
   describe("Contract Deployed", () => {
@@ -141,6 +153,31 @@ describe("Event Contract", () => {
     it("Close", async () => {
       await closeEvent(event);
       expect(await event.state()).to.equal(1);
+    });
+  });
+  describe("Batch Mint", () => {
+    beforeEach(async () => {
+      const addrList = await getAddressList(5);
+      await batchMint(event, addrList);
+    });
+    it("any address has ticket", async () => {
+      const addrList = await getAddressList(5);
+      addrList.forEach(async (v) => {
+        expect(await event.balanceOf(v)).to.be.equal(1);
+      });
+    });
+    it("can dedup", async () => {
+      await batchMint(event, [owner.address]);
+      expect(await event.balanceOf(owner.address)).to.be.equal(1);
+    });
+  });
+  describe("IsGoing", () => {
+    it("going true", async () => {
+      expect(await event.isGoing()).to.be.true;
+    });
+    it("false after closed", async () => {
+      await closeEvent(event);
+      expect(await event.isGoing()).to.be.false;
     });
   });
 });

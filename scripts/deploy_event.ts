@@ -10,7 +10,13 @@ async function deploy_normal_event() {
 }
 
 async function main() {
-  await deploy_normal_event();
+  const Event = await ethers.getContractFactory("Event");
+  console.log(
+    ethers.utils.Interface.getSighash(
+      Event.interface.functions["allUserInfo(address)"]
+    )
+  );
+  // await deploy_normal_event();
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -19,9 +19,6 @@ async function deploy_proxy_admin(eventAddress: string) {
   await admin.deployed();
 
   console.log(`✨Admin Contract Deployed✨: ${admin.address}`);
-  console.log(
-    `# Admin Contract Implement: ${await admin.logic()} Admin: ${await admin.admin()} `
-  );
   return admin.address;
 }
 
