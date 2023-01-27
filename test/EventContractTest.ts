@@ -18,7 +18,15 @@ const deployEvent = async () => {
   const event = await Event.deploy();
   await event.deployed();
   await (
-    await event.initialize(name, symbol, holdTime, personLimit, price, metaURL)
+    await event.initialize(
+      name,
+      symbol,
+      holdTime,
+      personLimit,
+      price,
+      metaURL,
+      owner.address
+    )
   ).wait();
   return { event, owner, holdTime, price, personLimit, name, symbol, metaURL };
 };

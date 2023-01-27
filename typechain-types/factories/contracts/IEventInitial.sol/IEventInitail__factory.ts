@@ -42,6 +42,11 @@ const _abi = [
         name: "_meta",
         type: "string",
       },
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
     ],
     name: "initialize",
     outputs: [],

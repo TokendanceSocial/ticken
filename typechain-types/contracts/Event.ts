@@ -97,7 +97,7 @@ export interface EventInterface extends utils.Interface {
     "closeEvent()": FunctionFragment;
     "eventEndTime()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
-    "initialize(string,string,uint256,uint256,uint256,string)": FunctionFragment;
+    "initialize(string,string,uint256,uint256,uint256,string,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isClosed()": FunctionFragment;
     "isGoing()": FunctionFragment;
@@ -195,6 +195,7 @@ export interface EventInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
       PromiseOrValue<string>
     ]
   ): string;
@@ -492,6 +493,7 @@ export interface Event extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -633,6 +635,7 @@ export interface Event extends BaseContract {
     _personLimit: PromiseOrValue<BigNumberish>,
     _price: PromiseOrValue<BigNumberish>,
     _meta: PromiseOrValue<string>,
+    _receiver: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -772,6 +775,7 @@ export interface Event extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -959,6 +963,7 @@ export interface Event extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1101,6 +1106,7 @@ export interface Event extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

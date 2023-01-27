@@ -25,7 +25,7 @@ import type {
 
 export interface IEventInitailInterface extends utils.Interface {
   functions: {
-    "initialize(string,string,uint256,uint256,uint256,string)": FunctionFragment;
+    "initialize(string,string,uint256,uint256,uint256,string,address)": FunctionFragment;
   };
 
   getFunction(nameOrSignatureOrTopic: "initialize"): FunctionFragment;
@@ -38,6 +38,7 @@ export interface IEventInitailInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
       PromiseOrValue<string>
     ]
   ): string;
@@ -81,6 +82,7 @@ export interface IEventInitail extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      owner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
@@ -92,6 +94,7 @@ export interface IEventInitail extends BaseContract {
     _personLimit: PromiseOrValue<BigNumberish>,
     _price: PromiseOrValue<BigNumberish>,
     _meta: PromiseOrValue<string>,
+    owner: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -103,6 +106,7 @@ export interface IEventInitail extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -117,6 +121,7 @@ export interface IEventInitail extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      owner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
@@ -129,6 +134,7 @@ export interface IEventInitail extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      owner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

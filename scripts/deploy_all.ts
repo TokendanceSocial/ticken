@@ -5,6 +5,7 @@ import ProxyAdmin from "@openzeppelin/upgrades-core/artifacts/@openzeppelin/cont
 // It will deploy Admin, ProxyAdmin, Event and a proxy for test.
 
 async function main() {
+  const [owner] = await ethers.getSigners();
   // test params
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
   const personLimit = 100;
@@ -46,7 +47,8 @@ async function main() {
     holdTime,
     personLimit,
     price,
-    metaURL
+    metaURL,
+    owner.address
   );
   const rc = await tx.wait();
   let deployEvent = rc?.events?.find((e) => e.event === "proxy_deployed");

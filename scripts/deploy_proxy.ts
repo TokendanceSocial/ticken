@@ -9,6 +9,7 @@ async function deploy_transparent_proxy(
   price: number,
   metaURL: string
 ) {
+  const [owner] = await ethers.getSigners();
   const admin = await ethers.getContractAt("Admin", adminAddress);
   const tx = await admin.deployProxy(
     name,
@@ -16,7 +17,8 @@ async function deploy_transparent_proxy(
     holdTime,
     personLimit,
     price,
-    metaURL
+    metaURL,
+    owner.address
   );
   const rc = await tx.wait();
   let event = rc?.events?.find((e) => e.event === "proxy_deployed");

@@ -90,7 +90,7 @@ export declare namespace EventInfo {
 
 export interface AdminInterface extends utils.Interface {
   functions: {
-    "deployProxy(string,string,uint256,uint256,uint256,string)": FunctionFragment;
+    "deployProxy(string,string,uint256,uint256,uint256,string,address)": FunctionFragment;
     "meetings()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -116,6 +116,7 @@ export interface AdminInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
       PromiseOrValue<string>
     ]
   ): string;
@@ -219,6 +220,7 @@ export interface Admin extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -250,6 +252,7 @@ export interface Admin extends BaseContract {
     _personLimit: PromiseOrValue<BigNumberish>,
     _price: PromiseOrValue<BigNumberish>,
     _meta: PromiseOrValue<string>,
+    _receiver: PromiseOrValue<string>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -279,6 +282,7 @@ export interface Admin extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -326,6 +330,7 @@ export interface Admin extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -356,6 +361,7 @@ export interface Admin extends BaseContract {
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
+      _receiver: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

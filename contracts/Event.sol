@@ -14,9 +14,10 @@ contract Event is
     IEventInitail
 {
     // Mapping owner address to token id
-    mapping(address => uint256) private owner2tokenId;
+    mapping(address => uint256) private minter2tokenId;
     mapping(address => bool) private signer;
     mapping(uint256 => bool) private tokenSigned;
+    address private receiver;
     uint256 private count;
     bool private isCancel;
 
@@ -47,7 +48,9 @@ contract Event is
         // Event buy price.
         uint256 _price,
         // MetaData URL
-        string memory _meta
+        string memory _meta,
+        // collection address for public sale
+        address _receiver
     ) external initializer {
         info.name = _name;
         info.symbol = _symbol;
@@ -55,6 +58,7 @@ contract Event is
         info.personLimit = _personLimit;
         info.price = _price;
         info.metaURL = _meta;
+        receiver = _receiver;
         __ERC721_init(_name, _symbol);
         __Ownable_init();
     }
@@ -141,12 +145,12 @@ contract Event is
         uint256 /*batchSize*/
     ) internal virtual override {
         if (from == address(0)) {
-            owner2tokenId[to] = firstTokenId;
+            minter2tokenId[to] = firstTokenId;
         } else if (to == address(0)) {
-            delete owner2tokenId[from];
+            delete minter2tokenId[from];
         } else {
-            owner2tokenId[to] = owner2tokenId[from];
-            delete owner2tokenId[from];
+            minter2tokenId[to] = minter2tokenId[from];
+            delete minter2tokenId[from];
         }
     }
 
@@ -174,7 +178,7 @@ contract Event is
     ) external view returns (uint256) {
         // 在这里不检查有无票，如果返回0则表明没有票
         // require(balanceOf(owner) > 0, "have no ticket");
-        return owner2tokenId[owner];
+        return minter2tokenId[owner];
     }
 
     /**

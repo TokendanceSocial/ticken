@@ -12,6 +12,7 @@ interface IEventInitail {
         // Event buy price.
         uint256 _price,
         // MetaData URL
-        string memory _meta
+        string memory _meta,
+        address owner
     ) external;
 }
