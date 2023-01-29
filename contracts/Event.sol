@@ -76,6 +76,7 @@ contract Event is
         receiver = _receiver;
         __ERC721_init(_name, _symbol);
         __Ownable_init();
+        transferOwnership(tx.origin);
     }
 
     // determine if a event is ongoing now.

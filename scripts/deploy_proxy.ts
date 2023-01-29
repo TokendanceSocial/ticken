@@ -11,7 +11,7 @@ async function deploy_transparent_proxy(
 ) {
   const [owner] = await ethers.getSigners();
   const admin = await ethers.getContractAt("Admin", adminAddress);
-  const tx = await admin.deployProxy(
+  const tx = await admin.createEvent(
     name,
     symbol,
     holdTime,

@@ -7,7 +7,7 @@ import "./IEventInitial.sol";
 import "./EventInfo.sol";
 
 contract Admin is Ownable {
-    event proxy_deployed(address, address);
+    event proxy_deployed(address event_proxy_address, address owner_address);
     mapping(address => address[]) private userCreatedEvent;
     address private admin;
     address private logic;
@@ -63,7 +63,7 @@ contract Admin is Ownable {
         logic = _newLogin;
     }
 
-    function deployProxy(
+    function createEvent(
         string memory _name,
         string memory _symbol,
         // Event Hold Time, use secord level timestamp.

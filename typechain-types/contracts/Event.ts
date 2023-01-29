@@ -103,13 +103,16 @@ export interface EventInterface extends utils.Interface {
     "isClosed()": FunctionFragment;
     "isGoing()": FunctionFragment;
     "name()": FunctionFragment;
+    "origin()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerMint(address)": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
+    "receiver()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "saleMint(address)": FunctionFragment;
+    "sender()": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "sign(uint256)": FunctionFragment;
     "state()": FunctionFragment;
@@ -138,13 +141,16 @@ export interface EventInterface extends utils.Interface {
       | "isClosed"
       | "isGoing"
       | "name"
+      | "origin"
       | "owner"
       | "ownerMint"
       | "ownerOf"
+      | "receiver"
       | "renounceOwnership"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "saleMint"
+      | "sender"
       | "setApprovalForAll"
       | "sign"
       | "state"
@@ -209,6 +215,7 @@ export interface EventInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "isClosed", values?: undefined): string;
   encodeFunctionData(functionFragment: "isGoing", values?: undefined): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "origin", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerMint",
@@ -218,6 +225,7 @@ export interface EventInterface extends utils.Interface {
     functionFragment: "ownerOf",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "receiver", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -243,6 +251,7 @@ export interface EventInterface extends utils.Interface {
     functionFragment: "saleMint",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(functionFragment: "sender", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setApprovalForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
@@ -311,9 +320,11 @@ export interface EventInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "isClosed", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isGoing", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "origin", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerMint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "receiver", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -327,6 +338,7 @@ export interface EventInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "saleMint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "sender", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
     data: BytesLike
@@ -517,6 +529,8 @@ export interface Event extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    origin(overrides?: CallOverrides): Promise<[string]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     ownerMint(
@@ -528,6 +542,8 @@ export interface Event extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    receiver(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -552,6 +568,8 @@ export interface Event extends BaseContract {
       to: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    sender(overrides?: CallOverrides): Promise<[string]>;
 
     setApprovalForAll(
       operator: PromiseOrValue<string>,
@@ -664,6 +682,8 @@ export interface Event extends BaseContract {
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  origin(overrides?: CallOverrides): Promise<string>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   ownerMint(
@@ -675,6 +695,8 @@ export interface Event extends BaseContract {
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  receiver(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -699,6 +721,8 @@ export interface Event extends BaseContract {
     to: PromiseOrValue<string>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  sender(overrides?: CallOverrides): Promise<string>;
 
   setApprovalForAll(
     operator: PromiseOrValue<string>,
@@ -809,6 +833,8 @@ export interface Event extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<string>;
 
+    origin(overrides?: CallOverrides): Promise<string>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
     ownerMint(
@@ -820,6 +846,8 @@ export interface Event extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    receiver(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -842,6 +870,8 @@ export interface Event extends BaseContract {
       to: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    sender(overrides?: CallOverrides): Promise<string>;
 
     setApprovalForAll(
       operator: PromiseOrValue<string>,
@@ -1002,6 +1032,8 @@ export interface Event extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    origin(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     ownerMint(
@@ -1013,6 +1045,8 @@ export interface Event extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    receiver(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1037,6 +1071,8 @@ export interface Event extends BaseContract {
       to: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    sender(overrides?: CallOverrides): Promise<BigNumber>;
 
     setApprovalForAll(
       operator: PromiseOrValue<string>,
@@ -1150,6 +1186,8 @@ export interface Event extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    origin(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ownerMint(
@@ -1161,6 +1199,8 @@ export interface Event extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    receiver(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1185,6 +1225,8 @@ export interface Event extends BaseContract {
       to: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    sender(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setApprovalForAll(
       operator: PromiseOrValue<string>,

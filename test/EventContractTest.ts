@@ -5,7 +5,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Event } from "../typechain-types";
 import { EventInfo } from "../typechain-types/contracts/Event";
 
-const deployEvent = async () => {
+const acquireEventParam = () => {
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
   const personLimit = 100;
   const price = ethers.utils.parseEther("0.1");
@@ -13,10 +13,21 @@ const deployEvent = async () => {
   const symbol = "Ticken";
   const metaURL =
     "ipfs://bafybeifpeyasqdvrqa5g3cpmttrp3jjnlckrdrwnx5g2deydxlfk27q6zq/metadata.json";
-  const [owner] = await ethers.getSigners();
+  return { name, symbol, holdTime, personLimit, price, metaURL };
+};
+
+const deployEvent = async () => {
   const Event = await ethers.getContractFactory("Event");
   const event = await Event.deploy();
   await event.deployed();
+  return { event };
+};
+
+const deployAndInitEvent = async () => {
+  const { event } = await deployEvent();
+  const { name, symbol, holdTime, personLimit, price, metaURL } =
+    acquireEventParam();
+  const [owner] = await ethers.getSigners();
   await (
     await event.initialize(
       name,
@@ -28,7 +39,16 @@ const deployEvent = async () => {
       owner.address
     )
   ).wait();
-  return { event, owner, holdTime, price, personLimit, name, symbol, metaURL };
+  return {
+    event,
+    owner,
+    holdTime,
+    price,
+    personLimit,
+    name,
+    symbol,
+    metaURL,
+  };
 };
 
 const mintToOwner = async (event: Event) => {
@@ -58,12 +78,22 @@ const closeEvent = async (event: Event) => {
   await tx.wait();
 };
 
+export {
+  acquireEventParam,
+  mintToOwner,
+  getAddressList,
+  batchMint,
+  addSignerToOwner,
+  closeEvent,
+  deployEvent,
+};
+
 describe("Event Contract", () => {
   let event: Event;
   let owner: SignerWithAddress;
   let basic: EventInfo.BasicInfoStruct;
   beforeEach(async () => {
-    let result = await loadFixture(deployEvent);
+    let result = await loadFixture(deployAndInitEvent);
     event = result.event;
     owner = result.owner;
     basic = {

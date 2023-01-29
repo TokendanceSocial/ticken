@@ -90,7 +90,7 @@ export declare namespace EventInfo {
 
 export interface AdminInterface extends utils.Interface {
   functions: {
-    "deployProxy(string,string,uint256,uint256,uint256,string,address)": FunctionFragment;
+    "createEvent(string,string,uint256,uint256,uint256,string,address)": FunctionFragment;
     "meetings()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -100,7 +100,7 @@ export interface AdminInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "deployProxy"
+      | "createEvent"
       | "meetings"
       | "owner"
       | "renounceOwnership"
@@ -109,7 +109,7 @@ export interface AdminInterface extends utils.Interface {
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "deployProxy",
+    functionFragment: "createEvent",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
@@ -136,7 +136,7 @@ export interface AdminInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "deployProxy",
+    functionFragment: "createEvent",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "meetings", data: BytesLike): Result;
@@ -176,8 +176,8 @@ export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
 export interface proxy_deployedEventObject {
-  arg0: string;
-  arg1: string;
+  event_proxy_address: string;
+  owner_address: string;
 }
 export type proxy_deployedEvent = TypedEvent<
   [string, string],
@@ -213,7 +213,7 @@ export interface Admin extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    deployProxy(
+    createEvent(
       _name: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _holdTime: PromiseOrValue<BigNumberish>,
@@ -245,7 +245,7 @@ export interface Admin extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  deployProxy(
+  createEvent(
     _name: PromiseOrValue<string>,
     _symbol: PromiseOrValue<string>,
     _holdTime: PromiseOrValue<BigNumberish>,
@@ -275,7 +275,7 @@ export interface Admin extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    deployProxy(
+    createEvent(
       _name: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _holdTime: PromiseOrValue<BigNumberish>,
@@ -316,14 +316,17 @@ export interface Admin extends BaseContract {
     ): OwnershipTransferredEventFilter;
 
     "proxy_deployed(address,address)"(
-      arg0?: null,
-      arg1?: null
+      event_proxy_address?: null,
+      owner_address?: null
     ): proxy_deployedEventFilter;
-    proxy_deployed(arg0?: null, arg1?: null): proxy_deployedEventFilter;
+    proxy_deployed(
+      event_proxy_address?: null,
+      owner_address?: null
+    ): proxy_deployedEventFilter;
   };
 
   estimateGas: {
-    deployProxy(
+    createEvent(
       _name: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _holdTime: PromiseOrValue<BigNumberish>,
@@ -354,7 +357,7 @@ export interface Admin extends BaseContract {
   };
 
   populateTransaction: {
-    deployProxy(
+    createEvent(
       _name: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _holdTime: PromiseOrValue<BigNumberish>,

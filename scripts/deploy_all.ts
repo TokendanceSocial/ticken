@@ -1,5 +1,6 @@
 import { ethers } from "hardhat";
 import ProxyAdmin from "@openzeppelin/upgrades-core/artifacts/@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol/ProxyAdmin.json";
+import { solidityKeccak256 } from "ethers/lib/utils";
 
 // This function can used for test or first deploy.
 // It will deploy Admin, ProxyAdmin, Event and a proxy for test.
@@ -41,7 +42,7 @@ async function main() {
 
   // deploy proxy
   console.log("Proxy Start Deploy");
-  const tx = await admin.deployProxy(
+  const tx = await admin.createEvent(
     name,
     symbol,
     holdTime,
@@ -54,11 +55,23 @@ async function main() {
   let deployEvent = rc?.events?.find((e) => e.event === "proxy_deployed");
   const test_proxy_address = deployEvent?.args?.at(0);
 
+  console.log(
+    `🤵Deployer:${owner.address}(${ethers.utils.formatEther(
+      await owner.getBalance()
+    )} ETH)`
+  );
   // print result
-  console.log(`⭐️⭐️Depoly on success.
+  console.log(`⭐️⭐️Depoly success.
   Admin Address: ${admin_address}
   Event Address: ${event_implement_address}
   Test Event Proxy Address: ${test_proxy_address}`);
+
+  const eventC = await ethers.getContractAt("Event", test_proxy_address);
+  console.log(`🪡🪡Event Info:
+  Owner:${await eventC.owner()}
+  Sender:${await eventC.sender()}
+  Origin:${await eventC.origin()};
+  Receiver:${await eventC.receiver()}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
