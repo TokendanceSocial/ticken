@@ -13,6 +13,6 @@ interface IEventInitail {
         uint256 _price,
         // MetaData URL
         string memory _meta,
-        address owner
+        address payable owner
     ) external;
 }

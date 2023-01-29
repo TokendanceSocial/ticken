@@ -17,24 +17,39 @@ contract Event is
     mapping(address => uint256) private minter2tokenId;
     mapping(address => bool) private signer;
     mapping(uint256 => bool) private tokenSigned;
-    address private receiver;
+    address payable private receiver;
     uint256 private count;
     bool private isCancel;
 
     EventInfo.BasicInfo private info;
 
+    modifier haveNoTicket(address to) {
+        require(balanceOf(to) == 0, "Event:user have ticket");
+        _;
+    }
+
+    modifier enoughPrice() {
+        require(msg.value >= info.price, "Event: Not enough price");
+        _;
+    }
+
+    modifier lessThanLimit() {
+        require(count < info.personLimit, "Event:over invite person limit");
+        _;
+    }
+
     modifier eventActive() {
-        require(!isCancel, "event has been calceled");
+        require(!isCancel, "Event:event has been calceled");
         _;
     }
 
     modifier onlySigner() {
-        require(signer[msg.sender], "only signer can sign ticket");
+        require(signer[msg.sender], "Event:only signer can sign ticket");
         _;
     }
 
     modifier notSigned(uint256 tokenID) {
-        require(!tokenSigned[tokenID], "token has been signed");
+        require(!tokenSigned[tokenID], "Event:token has been signed");
         _;
     }
 
@@ -50,7 +65,7 @@ contract Event is
         // MetaData URL
         string memory _meta,
         // collection address for public sale
-        address _receiver
+        address payable _receiver
     ) external initializer {
         info.name = _name;
         info.symbol = _symbol;
@@ -68,14 +83,6 @@ contract Event is
     function isGoing() public view returns (bool) {
         return !isClosed() && (block.timestamp < eventEndTime());
     }
-
-    // function isGoingProxy() public view returns (bool) {
-    //     (bool success, bytes memory returndata) = address(this).staticcall(
-    //         hex"0c362f72"
-    //     );
-    //     require(success);
-    //     return abi.decode(returndata, (bool));
-    // }
 
     // get end time of a event. use 24 hours for default event end duration.
     function eventEndTime() public view returns (uint256) {
@@ -122,6 +129,14 @@ contract Event is
     }
 
     function ownerMint(address to) public onlyOwner eventActive {
+        uint256 id = counterAfterIncrease();
+        _safeMint(to, id);
+    }
+
+    function saleMint(
+        address to
+    ) public payable eventActive enoughPrice haveNoTicket(to) {
+        receiver.transfer(msg.value);
         uint256 id = counterAfterIncrease();
         _safeMint(to, id);
     }

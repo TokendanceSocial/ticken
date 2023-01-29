@@ -8,7 +8,7 @@ import { EventInfo } from "../typechain-types/contracts/Event";
 const deployEvent = async () => {
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
   const personLimit = 100;
-  const price = 0;
+  const price = ethers.utils.parseEther("0.1");
   const name = "TKD";
   const symbol = "Ticken";
   const metaURL =
@@ -186,6 +186,47 @@ describe("Event Contract", () => {
     it("false after closed", async () => {
       await closeEvent(event);
       expect(await event.isGoing()).to.be.false;
+    });
+  });
+  describe("Sale Mint", () => {
+    const saleMint = async (s: SignerWithAddress, ether: string = "0.1") => {
+      const tx = await event
+        .connect(s)
+        .saleMint(s.address, { value: ethers.utils.parseEther(ether) });
+      await tx.wait();
+    };
+    it("sold", async () => {
+      const [owner, holder] = await ethers.getSigners();
+      const originBalance = await owner.getBalance();
+
+      await saleMint(holder);
+      expect(await event.balanceOf(holder.address)).to.be.equal(1);
+      expect(await owner.getBalance()).to.be.equal(
+        originBalance.add(ethers.utils.parseEther("0.1"))
+      );
+    });
+    it("cannot sale twice", async () => {
+      const [owner, holder] = await ethers.getSigners();
+      await saleMint(holder);
+      let haveE = false;
+      try {
+        await saleMint(holder);
+      } catch {
+        haveE = true;
+      }
+
+      expect(haveE).to.be.true;
+    });
+    it("cannot sale not enough money", async () => {
+      let haveE = false;
+      try {
+        const [owner, holder] = await ethers.getSigners();
+        await saleMint(holder, "0.01");
+      } catch {
+        haveE = true;
+      }
+
+      expect(haveE).to.be.true;
     });
   });
 });

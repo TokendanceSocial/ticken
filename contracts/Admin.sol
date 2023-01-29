@@ -74,7 +74,7 @@ contract Admin is Ownable {
         uint256 _price,
         // MetaData URL
         string memory _meta,
-        address _receiver
+        address payable _receiver
     ) public payable {
         TransparentUpgradeableProxy p = new TransparentUpgradeableProxy(
             logic,

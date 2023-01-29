@@ -43,7 +43,7 @@ const _abi = [
         type: "string",
       },
       {
-        internalType: "address",
+        internalType: "address payable",
         name: "owner",
         type: "address",
       },
