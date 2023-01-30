@@ -13,6 +13,7 @@ contract Event is
     IERC721EnumerableUpgradeable,
     IEventInitail
 {
+    event airdrop(address, uint256);
     // Mapping owner address to token id
     mapping(address => uint256) private minter2tokenId;
     mapping(address => bool) private signer;
@@ -132,6 +133,7 @@ contract Event is
     function ownerMint(address to) public onlyOwner eventActive {
         uint256 id = counterAfterIncrease();
         _safeMint(to, id);
+        emit airdrop(to, id);
     }
 
     function saleMint(
