@@ -7,6 +7,7 @@ import { solidityKeccak256 } from "ethers/lib/utils";
 
 async function main() {
   const [owner] = await ethers.getSigners();
+  console.log("address:", owner.address);
   // test params
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
   const personLimit = 100;
@@ -65,13 +66,6 @@ async function main() {
   Admin Address: ${admin_address}
   Event Address: ${event_implement_address}
   Test Event Proxy Address: ${test_proxy_address}`);
-
-  const eventC = await ethers.getContractAt("Event", test_proxy_address);
-  console.log(`🪡🪡Event Info:
-  Owner:${await eventC.owner()}
-  Sender:${await eventC.sender()}
-  Origin:${await eventC.origin()};
-  Receiver:${await eventC.receiver()}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

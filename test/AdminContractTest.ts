@@ -81,4 +81,40 @@ describe("Admin Test", () => {
       expect(metaURL).to.equal(result);
     });
   });
+  describe("Events for Owner", () => {
+    let event: Event;
+    beforeEach(async () => {
+      event = await deployProxyEvent(admin);
+    });
+    it("has events", async () => {
+      let events = await admin.eventsForOwner();
+      expect(events.length).to.equal(1);
+      expect(events[0].basic.name).to.equal(await event.name());
+    });
+    it("has no attender", async () => {
+      const [owner, user] = await ethers.getSigners();
+      let events = await admin.connect(user).eventsForUser();
+      expect(events.length).to.equal(0);
+    });
+  });
+  describe("Events for User", () => {
+    let event: Event;
+    let user: SignerWithAddress;
+    beforeEach(async () => {
+      event = await deployProxyEvent(admin);
+      const [owner, holder] = await ethers.getSigners();
+      user = holder;
+      await (
+        await event.ownerMint(holder.address)
+      ).wait;
+    });
+    it("owner is not attender", async () => {
+      let events = await admin.eventsForUser();
+      expect(events.length).to.equal(0);
+    });
+    it("user can be attender", async () => {
+      let events = await admin.connect(user).eventsForUser();
+      expect(events.length).to.equal(1);
+    });
+  });
 });

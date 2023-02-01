@@ -91,7 +91,8 @@ export declare namespace EventInfo {
 export interface AdminInterface extends utils.Interface {
   functions: {
     "createEvent(string,string,uint256,uint256,uint256,string,address)": FunctionFragment;
-    "meetings()": FunctionFragment;
+    "eventsForOwner()": FunctionFragment;
+    "eventsForUser()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
@@ -101,7 +102,8 @@ export interface AdminInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "createEvent"
-      | "meetings"
+      | "eventsForOwner"
+      | "eventsForUser"
       | "owner"
       | "renounceOwnership"
       | "transferOwnership"
@@ -120,7 +122,14 @@ export interface AdminInterface extends utils.Interface {
       PromiseOrValue<string>
     ]
   ): string;
-  encodeFunctionData(functionFragment: "meetings", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "eventsForOwner",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "eventsForUser",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -139,7 +148,14 @@ export interface AdminInterface extends utils.Interface {
     functionFragment: "createEvent",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "meetings", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "eventsForOwner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "eventsForUser",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -224,7 +240,11 @@ export interface Admin extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    meetings(
+    eventsForOwner(
+      overrides?: CallOverrides
+    ): Promise<[EventInfo.AllInfoStructOutput[]]>;
+
+    eventsForUser(
       overrides?: CallOverrides
     ): Promise<[EventInfo.AllInfoStructOutput[]]>;
 
@@ -256,7 +276,13 @@ export interface Admin extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  meetings(overrides?: CallOverrides): Promise<EventInfo.AllInfoStructOutput[]>;
+  eventsForOwner(
+    overrides?: CallOverrides
+  ): Promise<EventInfo.AllInfoStructOutput[]>;
+
+  eventsForUser(
+    overrides?: CallOverrides
+  ): Promise<EventInfo.AllInfoStructOutput[]>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -286,7 +312,11 @@ export interface Admin extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    meetings(
+    eventsForOwner(
+      overrides?: CallOverrides
+    ): Promise<EventInfo.AllInfoStructOutput[]>;
+
+    eventsForUser(
       overrides?: CallOverrides
     ): Promise<EventInfo.AllInfoStructOutput[]>;
 
@@ -337,7 +367,9 @@ export interface Admin extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    meetings(overrides?: CallOverrides): Promise<BigNumber>;
+    eventsForOwner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    eventsForUser(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -368,7 +400,9 @@ export interface Admin extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    meetings(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    eventsForOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    eventsForUser(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
