@@ -14,7 +14,11 @@ const config: HardhatUserConfig = {
     },
     mumbai: {
       url: process.env.MUMBAI_URL,
-      accounts: [process.env.MUMBAI_PRIVATE_KEY || ""],
+      accounts: [process.env.WALLET_PRIVATE_KEY || ""],
+    },
+    goeril: {
+      url: process.env.GOERIL_URL,
+      accounts: [process.env.WALLET_PRIVATE_KEY || ""],
     },
   },
 };

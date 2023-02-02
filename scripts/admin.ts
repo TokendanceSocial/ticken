@@ -1,19 +1,26 @@
 import { ethers } from "hardhat";
-import { Admin__factory } from "../typechain-types";
+import { Admin__factory, Event__factory } from "../typechain-types";
 
 /*
 ⭐️⭐️Depoly success.
-  Admin Address: 0x41528Ac1374698A78a89e7b2b548DcEd7184e142
-  Event Address: 0x99af6A8F7dfEa81E57c9f47C526cdf77657B1649
-  Test Event Proxy Address: 0xBA6Eac6744cD5f749061F03AECF06A67a06cbC09
+  Admin Address: 0x105ACC974958B6bc6f7EfC1C30Aa503E280f074a
+  Event Address: 0x4C9A33F44859DAc68d49d762Ed5A53B6E4307e65
+  Test Event Proxy Address: 0xD9711A5C3C2C05604C483c9999E35709059237ab
 */
 async function main() {
   const [owner] = await ethers.getSigners();
-  const admin = await Admin__factory.connect(
-    "0x41528Ac1374698A78a89e7b2b548DcEd7184e142",
+
+  console.log("address:", owner.address);
+  const admin = Admin__factory.connect(
+    "0x710e63793974bAd88375720aACfD0c57d18D4573",
     owner
   );
-  console.log(await admin.eventsForOwner());
+  console.log(await admin.eventsForOwner(owner.getAddress()));
+  // const event = Event__factory.connect(
+  //   "0x689c9590950E7E87bc7FF84e02bA3f613cD13732",
+  //   owner
+  // );
+  // await event.ownerMint(owner.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

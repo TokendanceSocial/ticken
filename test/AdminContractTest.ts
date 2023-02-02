@@ -87,13 +87,13 @@ describe("Admin Test", () => {
       event = await deployProxyEvent(admin);
     });
     it("has events", async () => {
-      let events = await admin.eventsForOwner();
+      let events = await admin.eventsForOwner(owner.address);
       expect(events.length).to.equal(1);
       expect(events[0].basic.name).to.equal(await event.name());
     });
     it("has no attender", async () => {
       const [owner, user] = await ethers.getSigners();
-      let events = await admin.connect(user).eventsForUser();
+      let events = await admin.connect(user).eventsForUser(user.address);
       expect(events.length).to.equal(0);
     });
   });
@@ -109,11 +109,11 @@ describe("Admin Test", () => {
       ).wait;
     });
     it("owner is not attender", async () => {
-      let events = await admin.eventsForUser();
+      let events = await admin.eventsForUser(owner.address);
       expect(events.length).to.equal(0);
     });
     it("user can be attender", async () => {
-      let events = await admin.connect(user).eventsForUser();
+      let events = await admin.connect(user).eventsForUser(user.address);
       expect(events.length).to.equal(1);
     });
   });

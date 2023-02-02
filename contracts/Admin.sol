@@ -18,62 +18,51 @@ contract Admin is Ownable {
         admin = _admin;
     }
 
-    function eventsForUser() public view returns (EventInfo.AllInfo[] memory) {
+    function eventsForUser(
+        address user
+    ) public view returns (EventInfo.AllInfo[] memory) {
         uint256 count = 0;
-        for (uint i = 0; i < events.length; ) {
-            if (balanceOfBytes(events[i], msg.sender) > 0) {
+        for (uint i = 0; i < events.length; i++) {
+            if (balanceOfBytes(events[i], user) > 0) {
                 count++;
-            }
-            unchecked {
-                i++;
             }
         }
 
         EventInfo.AllInfo[] memory result = new EventInfo.AllInfo[](count);
         uint256 ptr = 0;
-        for (uint i = 0; i < events.length; ) {
-            if (balanceOfBytes(events[i], msg.sender) > 0) {
+        for (uint i = 0; i < events.length; i++) {
+            if (balanceOfBytes(events[i], user) > 0) {
                 EventInfo.AllInfo memory info = allUserInfoBytes(
                     events[i],
-                    msg.sender
+                    user
                 );
                 info.basic.contractAddress = events[i];
                 result[ptr] = info;
                 ptr++;
             }
-            unchecked {
-                i++;
-            }
         }
         return result;
     }
 
-    function eventsForOwner() public view returns (EventInfo.AllInfo[] memory) {
-        address[] memory ps = userCreatedEvent[msg.sender];
+    function eventsForOwner(
+        address owner
+    ) public view returns (EventInfo.AllInfo[] memory) {
+        address[] memory ps = userCreatedEvent[owner];
         uint256 count = 0;
-        for (uint i = 0; i < ps.length; ) {
+        for (uint i = 0; i < ps.length; i++) {
             if (isGoingBytes(ps[i])) {
                 count++;
-            }
-            unchecked {
-                i++;
             }
         }
 
         EventInfo.AllInfo[] memory result = new EventInfo.AllInfo[](count);
         uint256 ptr = 0;
-        for (uint i = 0; i < ps.length; ) {
+        for (uint i = 0; i < ps.length; i++) {
             if (isGoingBytes(ps[i])) {
-                EventInfo.AllInfo memory info = allUserInfoBytes(
-                    ps[i],
-                    msg.sender
-                );
+                EventInfo.AllInfo memory info = allUserInfoBytes(ps[i], owner);
                 info.basic.contractAddress = ps[i];
                 result[ptr] = info;
                 ptr++;
-            }
-            unchecked {
-                i++;
             }
         }
         return result;
@@ -107,10 +96,6 @@ contract Admin is Ownable {
         );
         require(success);
         return abi.decode(returndata, (bool));
-    }
-
-    function updateLogic(address _newLogin) external onlyOwner {
-        logic = _newLogin;
     }
 
     function createEvent(
