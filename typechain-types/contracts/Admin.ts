@@ -35,8 +35,10 @@ export declare namespace EventInfo {
     holdTime: PromiseOrValue<BigNumberish>;
     personLimit: PromiseOrValue<BigNumberish>;
     price: PromiseOrValue<BigNumberish>;
+    rebates: PromiseOrValue<BigNumberish>;
     metaURL: PromiseOrValue<string>;
     state: PromiseOrValue<BigNumberish>;
+    eventType: PromiseOrValue<BigNumberish>;
     contractAddress: PromiseOrValue<string>;
   };
 
@@ -46,7 +48,9 @@ export declare namespace EventInfo {
     BigNumber,
     BigNumber,
     BigNumber,
+    BigNumber,
     string,
+    number,
     number,
     string
   ] & {
@@ -55,8 +59,10 @@ export declare namespace EventInfo {
     holdTime: BigNumber;
     personLimit: BigNumber;
     price: BigNumber;
+    rebates: BigNumber;
     metaURL: string;
     state: number;
+    eventType: number;
     contractAddress: string;
   };
 
@@ -90,7 +96,7 @@ export declare namespace EventInfo {
 
 export interface AdminInterface extends utils.Interface {
   functions: {
-    "createEvent(string,string,uint256,uint256,uint256,string,address)": FunctionFragment;
+    "createEvent(string,string,uint256,uint256,uint256,uint256,string,address,uint8)": FunctionFragment;
     "eventsForOwner(address)": FunctionFragment;
     "eventsForUser(address)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -116,8 +122,10 @@ export interface AdminInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
-      PromiseOrValue<string>
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
     ]
   ): string;
   encodeFunctionData(
@@ -225,8 +233,10 @@ export interface Admin extends BaseContract {
       _holdTime: PromiseOrValue<BigNumberish>,
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
+      _rebates: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
       _receiver: PromiseOrValue<string>,
+      _eventType: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -258,8 +268,10 @@ export interface Admin extends BaseContract {
     _holdTime: PromiseOrValue<BigNumberish>,
     _personLimit: PromiseOrValue<BigNumberish>,
     _price: PromiseOrValue<BigNumberish>,
+    _rebates: PromiseOrValue<BigNumberish>,
     _meta: PromiseOrValue<string>,
     _receiver: PromiseOrValue<string>,
+    _eventType: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -291,8 +303,10 @@ export interface Admin extends BaseContract {
       _holdTime: PromiseOrValue<BigNumberish>,
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
+      _rebates: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
       _receiver: PromiseOrValue<string>,
+      _eventType: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -343,8 +357,10 @@ export interface Admin extends BaseContract {
       _holdTime: PromiseOrValue<BigNumberish>,
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
+      _rebates: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
       _receiver: PromiseOrValue<string>,
+      _eventType: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -377,8 +393,10 @@ export interface Admin extends BaseContract {
       _holdTime: PromiseOrValue<BigNumberish>,
       _personLimit: PromiseOrValue<BigNumberish>,
       _price: PromiseOrValue<BigNumberish>,
+      _rebates: PromiseOrValue<BigNumberish>,
       _meta: PromiseOrValue<string>,
       _receiver: PromiseOrValue<string>,
+      _eventType: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

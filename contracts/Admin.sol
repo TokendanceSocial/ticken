@@ -107,9 +107,13 @@ contract Admin is Ownable {
         uint256 _personLimit,
         // Event buy price.
         uint256 _price,
+        // Event rebates
+        uint256 _rebates,
         // MetaData URL
         string memory _meta,
-        address payable _receiver
+        // collection address for public sale
+        address payable _receiver,
+        EventInfo.EventType _eventType
     ) public payable {
         TransparentUpgradeableProxy p = new TransparentUpgradeableProxy(
             logic,
@@ -122,8 +126,10 @@ contract Admin is Ownable {
             _holdTime,
             _personLimit,
             _price,
+            _rebates,
             _meta,
-            _receiver
+            _receiver,
+            _eventType
         );
         userCreatedEvent[msg.sender].push(address(p));
         events.push(address(p));

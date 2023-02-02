@@ -7,14 +7,21 @@ library EventInfo {
         Close
     }
 
+    enum EventType {
+        PublicSale,
+        InviteOnly
+    }
+
     struct BasicInfo {
         string name;
         string symbol;
         uint256 holdTime;
         uint256 personLimit;
         uint256 price;
+        uint256 rebates;
         string metaURL;
         EventState state;
+        EventType eventType;
         address contractAddress;
     }
 

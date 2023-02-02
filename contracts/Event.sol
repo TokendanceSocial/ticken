@@ -16,11 +16,13 @@ contract Event is
     event airdrop(address, uint256);
     // Mapping owner address to token id
     mapping(address => uint256) private minter2tokenId;
-    mapping(address => bool) private signer;
     mapping(uint256 => bool) private tokenSigned;
     address payable private receiver;
     uint256 private count;
     bool private isCancel;
+
+    mapping(address => bool) private signer;
+    address[] private signer_list;
 
     EventInfo.BasicInfo private info;
 
@@ -63,21 +65,27 @@ contract Event is
         uint256 _personLimit,
         // Event buy price.
         uint256 _price,
+        // Event rebates
+        uint256 _rebates,
         // MetaData URL
         string memory _meta,
         // collection address for public sale
-        address payable _receiver
+        address payable _receiver,
+        EventInfo.EventType _eventType
     ) external initializer {
         info.name = _name;
         info.symbol = _symbol;
         info.holdTime = _holdTime;
         info.personLimit = _personLimit;
         info.price = _price;
+        info.rebates = _rebates;
         info.metaURL = _meta;
+        info.eventType = _eventType;
         receiver = _receiver;
         __ERC721_init(_name, _symbol);
         __Ownable_init();
         transferOwnership(tx.origin);
+        addSigner(tx.origin);
     }
 
     // determine if a event is ongoing now.
@@ -216,8 +224,17 @@ contract Event is
 
     // === sign function === //
 
-    function addSigner(address a) public onlyOwner {
+    function batchAddSigner(
+        address[] calldata alist
+    ) public onlyOwner eventActive {
+        for (uint256 i = 0; i < alist.length; i++) {
+            addSigner(alist[i]);
+        }
+    }
+
+    function addSigner(address a) internal {
         signer[a] = true;
+        signer_list.push(a);
     }
 
     function sign(

@@ -12,10 +12,12 @@ async function main() {
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
   const personLimit = 100;
   const price = 0;
+  const rebates = 0;
   const name = "TKD";
   const symbol = "Ticken";
   const metaURL =
     "ipfs://bafybeifpeyasqdvrqa5g3cpmttrp3jjnlckrdrwnx5g2deydxlfk27q6zq/metadata.json";
+  const eventType = 0;
 
   // deploy event
   console.log("Normal Event Start Deploy");
@@ -49,8 +51,10 @@ async function main() {
     holdTime,
     personLimit,
     price,
+    rebates,
     metaURL,
-    owner.address
+    owner.address,
+    eventType
   );
   const rc = await tx.wait();
   let deployEvent = rc?.events?.find((e) => e.event === "proxy_deployed");

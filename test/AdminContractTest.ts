@@ -30,8 +30,16 @@ const deployAdmin = async () => {
 };
 
 const deployProxyEvent = async (admin: Admin): Promise<Event> => {
-  const { name, symbol, holdTime, personLimit, price, metaURL } =
-    acquireEventParam();
+  const {
+    name,
+    symbol,
+    holdTime,
+    personLimit,
+    price,
+    metaURL,
+    rebates,
+    eventType,
+  } = acquireEventParam();
   const [o] = await ethers.getSigners();
   const tx = await admin.createEvent(
     name,
@@ -39,8 +47,10 @@ const deployProxyEvent = async (admin: Admin): Promise<Event> => {
     holdTime,
     personLimit,
     price,
+    rebates,
     metaURL,
-    o.address
+    o.address,
+    eventType
   );
   const rc = await tx.wait();
   let event = rc?.events?.find((e) => e.event === "proxy_deployed");

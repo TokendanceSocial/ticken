@@ -7,7 +7,9 @@ async function deploy_transparent_proxy(
   holdTime: number,
   personLimit: number,
   price: number,
-  metaURL: string
+  rebates: number,
+  metaURL: string,
+  eventType: number
 ) {
   const [owner] = await ethers.getSigners();
   const admin = await ethers.getContractAt("Admin", adminAddress);
@@ -17,8 +19,10 @@ async function deploy_transparent_proxy(
     holdTime,
     personLimit,
     price,
+    rebates,
     metaURL,
-    owner.address
+    owner.address,
+    eventType
   );
   const rc = await tx.wait();
   let event = rc?.events?.find((e) => e.event === "proxy_deployed");
@@ -32,18 +36,22 @@ async function main() {
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
   const personLimit = 100;
   const price = 0;
+  const rebates = 0;
   const name = "TKD";
   const symbol = "Ticken";
   const metaURL =
     "ipfs://bafybeifpeyasqdvrqa5g3cpmttrp3jjnlckrdrwnx5g2deydxlfk27q6zq/metadata.json";
+  const eventType = 0;
   await deploy_transparent_proxy(
     "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
     name,
     symbol,
     holdTime,
     personLimit,
-    personLimit,
-    metaURL
+    price,
+    rebates,
+    metaURL,
+    eventType
   );
 }
 

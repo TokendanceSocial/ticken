@@ -9,11 +9,23 @@ const acquireEventParam = () => {
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
   const personLimit = 100;
   const price = ethers.utils.parseEther("0.1");
+  // 1%
+  const rebates = 10;
   const name = "TKD";
   const symbol = "Ticken";
   const metaURL =
     "ipfs://bafybeifpeyasqdvrqa5g3cpmttrp3jjnlckrdrwnx5g2deydxlfk27q6zq/metadata.json";
-  return { name, symbol, holdTime, personLimit, price, metaURL };
+  const eventType = 0;
+  return {
+    name,
+    symbol,
+    holdTime,
+    personLimit,
+    price,
+    metaURL,
+    rebates,
+    eventType,
+  };
 };
 
 const deployEvent = async () => {
@@ -25,8 +37,16 @@ const deployEvent = async () => {
 
 const deployAndInitEvent = async () => {
   const { event } = await deployEvent();
-  const { name, symbol, holdTime, personLimit, price, metaURL } =
-    acquireEventParam();
+  const {
+    name,
+    symbol,
+    holdTime,
+    personLimit,
+    price,
+    metaURL,
+    rebates,
+    eventType,
+  } = acquireEventParam();
   const [owner] = await ethers.getSigners();
   await (
     await event.initialize(
@@ -35,8 +55,10 @@ const deployAndInitEvent = async () => {
       holdTime,
       personLimit,
       price,
+      rebates,
       metaURL,
-      owner.address
+      owner.address,
+      eventType
     )
   ).wait();
   return {
@@ -48,6 +70,8 @@ const deployAndInitEvent = async () => {
     name,
     symbol,
     metaURL,
+    rebates,
+    eventType,
   };
 };
 
@@ -69,7 +93,7 @@ const batchMint = async (event: Event, addressList: string[]) => {
 
 const addSignerToOwner = async (event: Event) => {
   const [owner] = await ethers.getSigners();
-  const tx = await event.addSigner(owner.address);
+  const tx = await event.batchAddSigner([owner.address]);
   await tx.wait();
 };
 
@@ -103,6 +127,8 @@ describe("Event Contract", () => {
       name: result.name,
       symbol: result.symbol,
       metaURL: result.metaURL,
+      rebates: result.rebates,
+      eventType: result.eventType,
       state: 0,
       contractAddress: "",
     };
@@ -126,7 +152,7 @@ describe("Event Contract", () => {
       const allInfo = await event.allUserInfo(owner.address);
       expect(allInfo.user.tokenId).to.equal(0);
       expect(allInfo.user.canInvite).to.equal(true);
-      expect(allInfo.user.isSigner).to.equal(false);
+      expect(allInfo.user.isSigner).to.equal(true);
       expect(allInfo.user.isSigned).to.equal(false);
     });
   });
