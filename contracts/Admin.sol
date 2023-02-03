@@ -18,12 +18,16 @@ contract Admin is Ownable {
         admin = _admin;
     }
 
+    /// @dev 返回某个用户参加的所有正在进行的活动
+    /// @param user 用户地址
     function eventsForUser(
         address user
     ) public view returns (EventInfo.AllInfo[] memory) {
         uint256 count = 0;
         for (uint i = 0; i < events.length; i++) {
-            if (balanceOfBytes(events[i], user) > 0) {
+            if (
+                isGoingBytes(events[i]) && balanceOfBytes(events[i], user) > 0
+            ) {
                 count++;
             }
         }
@@ -31,7 +35,9 @@ contract Admin is Ownable {
         EventInfo.AllInfo[] memory result = new EventInfo.AllInfo[](count);
         uint256 ptr = 0;
         for (uint i = 0; i < events.length; i++) {
-            if (balanceOfBytes(events[i], user) > 0) {
+            if (
+                isGoingBytes(events[i]) && balanceOfBytes(events[i], user) > 0
+            ) {
                 EventInfo.AllInfo memory info = allUserInfoBytes(
                     events[i],
                     user
@@ -44,6 +50,8 @@ contract Admin is Ownable {
         return result;
     }
 
+    /// @dev 返回某个用户创建的所有正在进行的活动
+    /// @param owner 用户地址
     function eventsForOwner(
         address owner
     ) public view returns (EventInfo.AllInfo[] memory) {
@@ -68,36 +76,16 @@ contract Admin is Ownable {
         return result;
     }
 
-    function balanceOfBytes(
-        address eventAddress,
-        address user
-    ) internal view returns (uint256) {
-        bytes memory cd = abi.encodeWithSignature("balanceOf(address)", user);
-        (bool success, bytes memory returndata) = address(eventAddress)
-            .staticcall(cd);
-        require(success);
-        return abi.decode(returndata, (uint256));
-    }
-
-    function allUserInfoBytes(
-        address eventAddress,
-        address user
-    ) internal view returns (EventInfo.AllInfo memory) {
-        bytes memory cd = abi.encodeWithSignature("allUserInfo(address)", user);
-        (bool success, bytes memory returndata) = address(eventAddress)
-            .staticcall(cd);
-        require(success);
-        return abi.decode(returndata, (EventInfo.AllInfo));
-    }
-
-    function isGoingBytes(address p) internal view returns (bool) {
-        (bool success, bytes memory returndata) = address(p).staticcall(
-            hex"0c362f72"
-        );
-        require(success);
-        return abi.decode(returndata, (bool));
-    }
-
+    /// @dev 创建一场活动
+    /// @param _name 活动名
+    /// @param _symbol 活动缩写
+    /// @param _holdTime 举办时间(秒级别时间戳)
+    /// @param _personLimit 限制人数
+    /// @param _price 发售价格(单位:wei)
+    /// @param _rebates 返佣比例(精度: 0.1%)
+    /// @param _meta 元数据地址
+    /// @param _receiver 返佣收款人（填写创建者地址）
+    /// @param _eventType 事件类型，如0为公售，1为仅限邀请
     function createEvent(
         string memory _name,
         string memory _symbol,
@@ -134,5 +122,35 @@ contract Admin is Ownable {
         userCreatedEvent[msg.sender].push(address(p));
         events.push(address(p));
         emit proxy_deployed(address(p), msg.sender);
+    }
+
+    function balanceOfBytes(
+        address eventAddress,
+        address user
+    ) internal view returns (uint256) {
+        bytes memory cd = abi.encodeWithSignature("balanceOf(address)", user);
+        (bool success, bytes memory returndata) = address(eventAddress)
+            .staticcall(cd);
+        require(success);
+        return abi.decode(returndata, (uint256));
+    }
+
+    function allUserInfoBytes(
+        address eventAddress,
+        address user
+    ) internal view returns (EventInfo.AllInfo memory) {
+        bytes memory cd = abi.encodeWithSignature("allUserInfo(address)", user);
+        (bool success, bytes memory returndata) = address(eventAddress)
+            .staticcall(cd);
+        require(success);
+        return abi.decode(returndata, (EventInfo.AllInfo));
+    }
+
+    function isGoingBytes(address p) internal view returns (bool) {
+        (bool success, bytes memory returndata) = address(p).staticcall(
+            hex"0c362f72"
+        );
+        require(success);
+        return abi.decode(returndata, (bool));
     }
 }

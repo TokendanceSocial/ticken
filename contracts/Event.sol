@@ -88,17 +88,19 @@ contract Event is
         addSigner(tx.origin);
     }
 
-    // determine if a event is ongoing now.
-    // you can call it in Admin directly by code `staticcall(hex"0c362f72")`
+    /// @dev determine if a event is ongoing now.
+    /// @dev you can call it in Admin directly by code `staticcall(hex"0c362f72")`
     function isGoing() public view returns (bool) {
         return !isClosed() && (block.timestamp < eventEndTime());
     }
 
-    // get end time of a event. use 24 hours for default event end duration.
+    /// @dev get end time of a event. use 24 hours for default event end duration.
     function eventEndTime() public view returns (uint256) {
         return info.holdTime + 26 * 60 * 60;
     }
 
+    /// @dev 通过用户地址，返回合约的全部信息
+    /// @return 可以看{EventInfo.AllInfo}
     function allUserInfo(
         address user
     ) public view returns (EventInfo.AllInfo memory) {
@@ -116,7 +118,7 @@ contract Event is
     }
 
     // === state function === //
-    function state() public view returns (EventInfo.EventState) {
+    function state() internal view returns (EventInfo.EventState) {
         if (isCancel) {
             return EventInfo.EventState.Close;
         }
@@ -124,7 +126,7 @@ contract Event is
     }
 
     // === mint function === //
-
+    /// @dev 空投方法，批量输入需要空投的地址
     function batchMint(address[] memory to) public onlyOwner {
         for (uint256 i = 0; i < to.length; ) {
             address mintAddr = to[i];
@@ -144,6 +146,7 @@ contract Event is
         emit airdrop(to, id);
     }
 
+    /// @dev 公售的方法，输入购买票的地址
     function saleMint(
         address to
     ) public payable eventActive enoughPrice haveNoTicket(to) {
@@ -224,6 +227,7 @@ contract Event is
 
     // === sign function === //
 
+    /// @dev 批量增加核销人
     function batchAddSigner(
         address[] calldata alist
     ) public onlyOwner eventActive {
@@ -237,6 +241,8 @@ contract Event is
         signer_list.push(a);
     }
 
+    /// @dev 签到
+    /// @param tokenId 需要签到的票的ID
     function sign(
         uint256 tokenId
     ) public onlySigner notSigned(tokenId) eventActive {
@@ -245,10 +251,13 @@ contract Event is
     }
 
     // === close event === //
+
+    /// @dev 关闭活动
     function closeEvent() public onlyOwner {
         isCancel = true;
     }
 
+    /// @dev 活动是否已经关闭
     function isClosed() public view returns (bool) {
         return isCancel;
     }

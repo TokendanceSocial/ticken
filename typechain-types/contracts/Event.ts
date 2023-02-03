@@ -118,7 +118,6 @@ export interface EventInterface extends utils.Interface {
     "saleMint(address)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "sign(uint256)": FunctionFragment;
-    "state()": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenByIndex(uint256)": FunctionFragment;
@@ -153,7 +152,6 @@ export interface EventInterface extends utils.Interface {
       | "saleMint"
       | "setApprovalForAll"
       | "sign"
-      | "state"
       | "supportsInterface"
       | "symbol"
       | "tokenByIndex"
@@ -259,7 +257,6 @@ export interface EventInterface extends utils.Interface {
     functionFragment: "sign",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(functionFragment: "state", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
@@ -343,7 +340,6 @@ export interface EventInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "sign", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "state", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
@@ -587,8 +583,6 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    state(overrides?: CallOverrides): Promise<[number]>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -736,8 +730,6 @@ export interface Event extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  state(overrides?: CallOverrides): Promise<number>;
-
   supportsInterface(
     interfaceId: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
@@ -880,8 +872,6 @@ export interface Event extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    state(overrides?: CallOverrides): Promise<number>;
 
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
@@ -1081,8 +1071,6 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    state(overrides?: CallOverrides): Promise<BigNumber>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -1230,8 +1218,6 @@ export interface Event extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
-
-    state(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
