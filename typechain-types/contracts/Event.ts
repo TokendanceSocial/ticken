@@ -96,6 +96,7 @@ export declare namespace EventInfo {
 
 export interface EventInterface extends utils.Interface {
   functions: {
+    "airdropUsers()": FunctionFragment;
     "allUserInfo(address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -118,6 +119,7 @@ export interface EventInterface extends utils.Interface {
     "saleMint(address)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "sign(uint256)": FunctionFragment;
+    "signerUsers()": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenByIndex(uint256)": FunctionFragment;
@@ -130,6 +132,7 @@ export interface EventInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "airdropUsers"
       | "allUserInfo"
       | "approve"
       | "balanceOf"
@@ -152,6 +155,7 @@ export interface EventInterface extends utils.Interface {
       | "saleMint"
       | "setApprovalForAll"
       | "sign"
+      | "signerUsers"
       | "supportsInterface"
       | "symbol"
       | "tokenByIndex"
@@ -162,6 +166,10 @@ export interface EventInterface extends utils.Interface {
       | "transferOwnership"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "airdropUsers",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "allUserInfo",
     values: [PromiseOrValue<string>]
@@ -258,6 +266,10 @@ export interface EventInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "signerUsers",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
@@ -291,6 +303,10 @@ export interface EventInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "airdropUsers",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "allUserInfo",
     data: BytesLike
@@ -340,6 +356,10 @@ export interface EventInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "sign", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "signerUsers",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
@@ -474,6 +494,8 @@ export interface Event extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    airdropUsers(overrides?: CallOverrides): Promise<[string[]]>;
+
     allUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -583,6 +605,8 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    signerUsers(overrides?: CallOverrides): Promise<[string[]]>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -620,6 +644,8 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
+
+  airdropUsers(overrides?: CallOverrides): Promise<string[]>;
 
   allUserInfo(
     user: PromiseOrValue<string>,
@@ -730,6 +756,8 @@ export interface Event extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  signerUsers(overrides?: CallOverrides): Promise<string[]>;
+
   supportsInterface(
     interfaceId: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
@@ -768,6 +796,8 @@ export interface Event extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    airdropUsers(overrides?: CallOverrides): Promise<string[]>;
+
     allUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -873,6 +903,8 @@ export interface Event extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    signerUsers(overrides?: CallOverrides): Promise<string[]>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -962,6 +994,8 @@ export interface Event extends BaseContract {
   };
 
   estimateGas: {
+    airdropUsers(overrides?: CallOverrides): Promise<BigNumber>;
+
     allUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1071,6 +1105,8 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    signerUsers(overrides?: CallOverrides): Promise<BigNumber>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -1110,6 +1146,8 @@ export interface Event extends BaseContract {
   };
 
   populateTransaction: {
+    airdropUsers(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     allUserInfo(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1218,6 +1256,8 @@ export interface Event extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    signerUsers(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,

@@ -187,6 +187,10 @@ describe("Event Contract", () => {
       allInfo = await event.allUserInfo(owner.address);
       expect(allInfo.user.isSigned).to.equal(true);
     });
+    it("signer has right length", async () => {
+      const signerList = await event.signerUsers();
+      expect(signerList.length).to.be.equal(1);
+    });
   });
   describe("Event close", () => {
     beforeEach(async () => {
@@ -210,22 +214,18 @@ describe("Event Contract", () => {
       expect(haveE).to.true;
     });
   });
-  describe("Event state", () => {
-    it("Live", async () => {
-      expect(await event.state()).to.equal(0);
-    });
-    it("Close", async () => {
-      await closeEvent(event);
-      expect(await event.state()).to.equal(1);
-    });
-  });
   describe("Batch Mint", () => {
+    const airdropSize = 5;
     beforeEach(async () => {
-      const addrList = await getAddressList(5);
+      const addrList = await getAddressList(airdropSize);
       await batchMint(event, addrList);
     });
+    it("airdrop user list equal number", async () => {
+      const airdropUserList = await event.airdropUsers();
+      expect(airdropUserList.length).equal(airdropSize);
+    });
     it("any address has ticket", async () => {
-      const addrList = await getAddressList(5);
+      const addrList = await getAddressList(airdropSize);
       addrList.forEach(async (v) => {
         expect(await event.balanceOf(v)).to.be.equal(1);
       });

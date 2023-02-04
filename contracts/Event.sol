@@ -20,6 +20,7 @@ contract Event is
     address payable private receiver;
     uint256 private count;
     bool private isCancel;
+    address[] private airdrops;
 
     mapping(address => bool) private signer;
     address[] private signer_list;
@@ -37,6 +38,9 @@ contract Event is
     }
 
     modifier lessThanLimit() {
+        if (info.personLimit == 0) {
+            _;
+        }
         require(count < info.personLimit, "Event:over invite person limit");
         _;
     }
@@ -99,6 +103,16 @@ contract Event is
         return info.holdTime + 26 * 60 * 60;
     }
 
+    /// @dev 获取空投用户
+    function airdropUsers() public view returns (address[] memory) {
+        return airdrops;
+    }
+
+    /// @dev 获取核销用户
+    function signerUsers() public view returns (address[] memory) {
+        return signer_list;
+    }
+
     /// @dev 通过用户地址，返回合约的全部信息
     /// @return 可以看{EventInfo.AllInfo}
     function allUserInfo(
@@ -143,6 +157,7 @@ contract Event is
     function ownerMint(address to) public onlyOwner eventActive {
         uint256 id = counterAfterIncrease();
         _safeMint(to, id);
+        airdrops.push(to);
         emit airdrop(to, id);
     }
 
@@ -237,6 +252,9 @@ contract Event is
     }
 
     function addSigner(address a) internal {
+        if (signer[a]) {
+            return;
+        }
         signer[a] = true;
         signer_list.push(a);
     }

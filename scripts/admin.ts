@@ -16,11 +16,6 @@ async function main() {
     owner
   );
   console.log(await admin.eventsForOwner(owner.getAddress()));
-  // const event = Event__factory.connect(
-  //   "0x689c9590950E7E87bc7FF84e02bA3f613cD13732",
-  //   owner
-  // );
-  // await event.ownerMint(owner.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
