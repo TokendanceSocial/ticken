@@ -23,6 +23,7 @@ library EventInfo {
         EventState state;
         EventType eventType;
         address contractAddress;
+        address creator;
     }
 
     struct UserInfo {

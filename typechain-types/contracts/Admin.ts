@@ -40,6 +40,7 @@ export declare namespace EventInfo {
     state: PromiseOrValue<BigNumberish>;
     eventType: PromiseOrValue<BigNumberish>;
     contractAddress: PromiseOrValue<string>;
+    creator: PromiseOrValue<string>;
   };
 
   export type BasicInfoStructOutput = [
@@ -52,6 +53,7 @@ export declare namespace EventInfo {
     string,
     number,
     number,
+    string,
     string
   ] & {
     name: string;
@@ -64,6 +66,7 @@ export declare namespace EventInfo {
     state: number;
     eventType: number;
     contractAddress: string;
+    creator: string;
   };
 
   export type UserInfoStruct = {

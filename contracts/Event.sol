@@ -27,13 +27,22 @@ contract Event is
 
     EventInfo.BasicInfo private info;
 
+    modifier beEventType(EventInfo.EventType t) {
+        require(info.eventType == t, "Event:event type not allow");
+        _;
+    }
+
     modifier haveNoTicket(address to) {
         require(balanceOf(to) == 0, "Event:user have ticket");
         _;
     }
 
     modifier enoughPrice() {
-        require(msg.value >= info.price, "Event: Not enough price");
+        uint256 value = info.price;
+        if (info.eventType == EventInfo.EventType.InviteOnly) {
+            value += info.rebates;
+        }
+        require(msg.value >= value, "Event: Not enough price");
         _;
     }
 
@@ -82,14 +91,15 @@ contract Event is
         info.holdTime = _holdTime;
         info.personLimit = _personLimit;
         info.price = _price;
-        info.rebates = _rebates;
+        info.rebates = (_price / 1000) * _rebates;
         info.metaURL = _meta;
         info.eventType = _eventType;
+        info.creator = tx.origin;
         receiver = _receiver;
         __ERC721_init(_name, _symbol);
         __Ownable_init();
-        transferOwnership(tx.origin);
-        addSigner(tx.origin);
+        transferOwnership(info.creator);
+        addSigner(info.creator);
     }
 
     /// @dev determine if a event is ongoing now.
@@ -164,7 +174,34 @@ contract Event is
     /// @dev 公售的方法，输入购买票的地址
     function saleMint(
         address to
-    ) public payable eventActive enoughPrice haveNoTicket(to) {
+    )
+        public
+        payable
+        eventActive
+        enoughPrice
+        haveNoTicket(to)
+        beEventType(EventInfo.EventType.PublicSale)
+    {
+        mint(to);
+    }
+
+    /// @dev 邀请售卖的方法，输入购买票的地址与邀请者
+    function inviteMint(
+        address to,
+        address payable inviter
+    )
+        public
+        payable
+        eventActive
+        enoughPrice
+        haveNoTicket(to)
+        beEventType(EventInfo.EventType.InviteOnly)
+    {
+        mint(to);
+        inviter.transfer(info.rebates);
+    }
+
+    function mint(address to) internal {
         receiver.transfer(msg.value);
         uint256 id = counterAfterIncrease();
         _safeMint(to, id);
@@ -266,6 +303,11 @@ contract Event is
     ) public onlySigner notSigned(tokenId) eventActive {
         _requireMinted(tokenId);
         tokenSigned[tokenId] = true;
+    }
+
+    function isSign(uint256 tokenId) public view returns (bool) {
+        _requireMinted(tokenId);
+        return tokenSigned[tokenId];
     }
 
     // === close event === //

@@ -40,6 +40,7 @@ export declare namespace EventInfo {
     state: PromiseOrValue<BigNumberish>;
     eventType: PromiseOrValue<BigNumberish>;
     contractAddress: PromiseOrValue<string>;
+    creator: PromiseOrValue<string>;
   };
 
   export type BasicInfoStructOutput = [
@@ -52,6 +53,7 @@ export declare namespace EventInfo {
     string,
     number,
     number,
+    string,
     string
   ] & {
     name: string;
@@ -64,6 +66,7 @@ export declare namespace EventInfo {
     state: number;
     eventType: number;
     contractAddress: string;
+    creator: string;
   };
 
   export type UserInfoStruct = {
@@ -106,9 +109,11 @@ export interface EventInterface extends utils.Interface {
     "eventEndTime()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "initialize(string,string,uint256,uint256,uint256,uint256,string,address,uint8)": FunctionFragment;
+    "inviteMint(address,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isClosed()": FunctionFragment;
     "isGoing()": FunctionFragment;
+    "isSign(uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerMint(address)": FunctionFragment;
@@ -142,9 +147,11 @@ export interface EventInterface extends utils.Interface {
       | "eventEndTime"
       | "getApproved"
       | "initialize"
+      | "inviteMint"
       | "isApprovedForAll"
       | "isClosed"
       | "isGoing"
+      | "isSign"
       | "name"
       | "owner"
       | "ownerMint"
@@ -217,11 +224,19 @@ export interface EventInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "inviteMint",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "isClosed", values?: undefined): string;
   encodeFunctionData(functionFragment: "isGoing", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "isSign",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -328,12 +343,14 @@ export interface EventInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "inviteMint", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isClosed", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isGoing", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isSign", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerMint", data: BytesLike): Result;
@@ -546,6 +563,12 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    inviteMint(
+      to: PromiseOrValue<string>,
+      inviter: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -555,6 +578,11 @@ export interface Event extends BaseContract {
     isClosed(overrides?: CallOverrides): Promise<[boolean]>;
 
     isGoing(overrides?: CallOverrides): Promise<[boolean]>;
+
+    isSign(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
@@ -697,6 +725,12 @@ export interface Event extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  inviteMint(
+    to: PromiseOrValue<string>,
+    inviter: PromiseOrValue<string>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   isApprovedForAll(
     owner: PromiseOrValue<string>,
     operator: PromiseOrValue<string>,
@@ -706,6 +740,11 @@ export interface Event extends BaseContract {
   isClosed(overrides?: CallOverrides): Promise<boolean>;
 
   isGoing(overrides?: CallOverrides): Promise<boolean>;
+
+  isSign(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
@@ -846,6 +885,12 @@ export interface Event extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    inviteMint(
+      to: PromiseOrValue<string>,
+      inviter: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -855,6 +900,11 @@ export interface Event extends BaseContract {
     isClosed(overrides?: CallOverrides): Promise<boolean>;
 
     isGoing(overrides?: CallOverrides): Promise<boolean>;
+
+    isSign(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -1046,6 +1096,12 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    inviteMint(
+      to: PromiseOrValue<string>,
+      inviter: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -1055,6 +1111,11 @@ export interface Event extends BaseContract {
     isClosed(overrides?: CallOverrides): Promise<BigNumber>;
 
     isGoing(overrides?: CallOverrides): Promise<BigNumber>;
+
+    isSign(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1198,6 +1259,12 @@ export interface Event extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    inviteMint(
+      to: PromiseOrValue<string>,
+      inviter: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -1207,6 +1274,11 @@ export interface Event extends BaseContract {
     isClosed(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isGoing(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    isSign(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

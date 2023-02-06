@@ -75,6 +75,46 @@ const deployAndInitEvent = async () => {
   };
 };
 
+const deployAndInitEventWithParam = async (param: any) => {
+  const { event } = await deployEvent();
+  const [owner] = await ethers.getSigners();
+  const {
+    name,
+    symbol,
+    holdTime,
+    personLimit,
+    price,
+    metaURL,
+    rebates,
+    eventType,
+  } = param;
+  await (
+    await event.initialize(
+      name,
+      symbol,
+      holdTime,
+      personLimit,
+      price,
+      rebates,
+      metaURL,
+      owner.address,
+      eventType
+    )
+  ).wait();
+  return {
+    event,
+    owner,
+    holdTime,
+    price,
+    personLimit,
+    name,
+    symbol,
+    metaURL,
+    rebates,
+    eventType,
+  };
+};
+
 const mintToOwner = async (event: Event) => {
   const [owner] = await ethers.getSigners();
   const tx = await event.ownerMint(owner.address);
@@ -131,6 +171,7 @@ describe("Event Contract", () => {
       eventType: result.eventType,
       state: 0,
       contractAddress: "",
+      creator: owner.address,
     };
   });
   describe("Contract Deployed", () => {
@@ -283,6 +324,35 @@ describe("Event Contract", () => {
       }
 
       expect(haveE).to.be.true;
+    });
+  });
+  describe("Invite Mint", () => {
+    beforeEach(async () => {
+      const param = acquireEventParam();
+      // InviteOnly EventType
+      param.eventType = 1;
+      const result = await deployAndInitEventWithParam(param);
+      event = result.event;
+    });
+    const inviteMint = async (
+      s: SignerWithAddress,
+      owner: SignerWithAddress,
+      ether: string = "0.2"
+    ) => {
+      const tx = await event.connect(s).inviteMint(s.address, owner.address, {
+        value: ethers.utils.parseEther(ether),
+      });
+      return tx.wait();
+    };
+    it("can mint", async () => {
+      const [owner, holder] = await ethers.getSigners();
+      const originBalance = await owner.getBalance();
+
+      await inviteMint(holder, owner);
+      expect(await event.balanceOf(holder.address)).to.be.equal(1);
+      // expect(await owner.getBalance()).to.be.equal(
+      //   originBalance.add(ethers.utils.parseEther("0.1"))
+      // );
     });
   });
 });

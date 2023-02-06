@@ -35,6 +35,9 @@ async function main() {
   const proxyAdmin = await ProxyAdminContractFactory.deploy();
   await proxyAdmin.deployed();
   const Admin = await ethers.getContractFactory("Admin");
+  console.log(
+    `start deploying admin(${event_implement_address},${proxyAdmin.address})`
+  );
   const admin = await Admin.deploy(
     // event contract
     event_implement_address,

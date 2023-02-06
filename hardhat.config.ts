@@ -22,6 +22,7 @@ const config: HardhatUserConfig = {
       accounts: [process.env.WALLET_PRIVATE_KEY || ""],
     },
   },
+  etherscan: { apiKey: process.env.ETHERSCAN_KEY },
 };
 
 export default config;
