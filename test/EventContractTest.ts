@@ -337,7 +337,7 @@ describe("Event Contract", () => {
     const inviteMint = async (
       s: SignerWithAddress,
       owner: SignerWithAddress,
-      ether: string = "0.2"
+      ether: string = "0.101"
     ) => {
       const tx = await event.connect(s).inviteMint(s.address, owner.address, {
         value: ethers.utils.parseEther(ether),
@@ -350,9 +350,9 @@ describe("Event Contract", () => {
 
       await inviteMint(holder, owner);
       expect(await event.balanceOf(holder.address)).to.be.equal(1);
-      // expect(await owner.getBalance()).to.be.equal(
-      //   originBalance.add(ethers.utils.parseEther("0.1"))
-      // );
+      expect(await owner.getBalance()).to.be.equal(
+        originBalance.add(ethers.utils.parseEther("0.101"))
+      );
     });
   });
 });

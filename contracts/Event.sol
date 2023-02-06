@@ -91,7 +91,9 @@ contract Event is
         info.holdTime = _holdTime;
         info.personLimit = _personLimit;
         info.price = _price;
-        info.rebates = (_price / 1000) * _rebates;
+        if (_eventType == EventInfo.EventType.InviteOnly) {
+            info.rebates = (_price / 1000) * _rebates;
+        }
         info.metaURL = _meta;
         info.eventType = _eventType;
         info.creator = tx.origin;
@@ -202,7 +204,7 @@ contract Event is
     }
 
     function mint(address to) internal {
-        receiver.transfer(msg.value);
+        receiver.transfer(msg.value - info.rebates);
         uint256 id = counterAfterIncrease();
         _safeMint(to, id);
     }
