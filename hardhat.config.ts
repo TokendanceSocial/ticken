@@ -17,6 +17,10 @@ const config: HardhatUserConfig = {
       url: process.env.MUMBAI_URL,
       accounts: [process.env.WALLET_PRIVATE_KEY || ""],
     },
+    polygon: {
+      url: process.env.POLYGON_URL,
+      accounts: [process.env.WALLET_PRIVATE_KEY || ""],
+    },
     goeril: {
       url: process.env.GOERIL_URL,
       accounts: [process.env.WALLET_PRIVATE_KEY || ""],
