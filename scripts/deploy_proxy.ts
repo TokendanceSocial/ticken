@@ -35,15 +35,15 @@ async function main() {
   // admin address
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
   const personLimit = 100;
-  const price = 0;
-  const rebates = 0;
+  const price = ethers.utils.parseEther("0.00001").toNumber();
+  const rebates = 10;
   const name = "TKD";
   const symbol = "Ticken";
   const metaURL =
     "ipfs://bafybeifpeyasqdvrqa5g3cpmttrp3jjnlckrdrwnx5g2deydxlfk27q6zq/metadata.json";
-  const eventType = 0;
+  const eventType = 1;
   await deploy_transparent_proxy(
-    "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    "0x4A325F249771b3eC0Af74de1C9a626b02EF0860A",
     name,
     symbol,
     holdTime,

@@ -4,6 +4,7 @@ import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Event } from "../typechain-types";
 import { EventInfo } from "../typechain-types/contracts/Event";
+import { BigNumber } from "ethers";
 
 const acquireEventParam = () => {
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
@@ -334,10 +335,11 @@ describe("Event Contract", () => {
       const result = await deployAndInitEventWithParam(param);
       event = result.event;
     });
+    const price = "0.101";
     const inviteMint = async (
       s: SignerWithAddress,
       owner: SignerWithAddress,
-      ether: string = "0.101"
+      ether: string = price
     ) => {
       const tx = await event.connect(s).inviteMint(s.address, owner.address, {
         value: ethers.utils.parseEther(ether),
@@ -351,7 +353,7 @@ describe("Event Contract", () => {
       await inviteMint(holder, owner);
       expect(await event.balanceOf(holder.address)).to.be.equal(1);
       expect(await owner.getBalance()).to.be.equal(
-        originBalance.add(ethers.utils.parseEther("0.101"))
+        originBalance.add(ethers.utils.parseEther(price))
       );
     });
   });

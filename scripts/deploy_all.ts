@@ -17,7 +17,7 @@ async function main() {
   const symbol = "Ticken";
   const metaURL =
     "ipfs://bafybeifpeyasqdvrqa5g3cpmttrp3jjnlckrdrwnx5g2deydxlfk27q6zq/metadata.json";
-  const eventType = 0;
+  const eventType = 1;
 
   // deploy event
   console.log("Normal Event Start Deploy");

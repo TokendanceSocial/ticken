@@ -38,11 +38,7 @@ contract Event is
     }
 
     modifier enoughPrice() {
-        uint256 value = info.price;
-        if (info.eventType == EventInfo.EventType.InviteOnly) {
-            value += info.rebates;
-        }
-        require(msg.value >= value, "Event: Not enough price");
+        require(msg.value >= info.price, "Event: Not enough price");
         _;
     }
 
@@ -200,11 +196,15 @@ contract Event is
         beEventType(EventInfo.EventType.InviteOnly)
     {
         mint(to);
-        inviter.transfer(info.rebates);
+        if (info.rebates != 0) {
+            inviter.call{value: info.rebates}("");
+        }
     }
 
     function mint(address to) internal {
-        receiver.transfer(msg.value - info.rebates);
+        if (msg.value - info.rebates != 0) {
+            receiver.call{value: msg.value - info.rebates}("");
+        }
         uint256 id = counterAfterIncrease();
         _safeMint(to, id);
     }
