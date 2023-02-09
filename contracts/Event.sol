@@ -127,7 +127,7 @@ contract Event is
         address user
     ) public view returns (EventInfo.AllInfo memory) {
         EventInfo.UserInfo memory userInfo;
-        userInfo.canInvite = true;
+        userInfo.canInvite = info.eventType == EventInfo.EventType.InviteOnly;
         userInfo.tokenId = this.tokenOfOwnerByIndex(user, 0);
         userInfo.isSigned = tokenSigned[userInfo.tokenId];
         userInfo.isSigner = signer[user];
