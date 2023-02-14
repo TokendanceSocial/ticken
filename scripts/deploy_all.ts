@@ -7,6 +7,7 @@ import { solidityKeccak256 } from "ethers/lib/utils";
 
 async function main() {
   const [owner] = await ethers.getSigners();
+  const blockNumber = await ethers.provider.getBlockNumber();
   console.log("address:", owner.address);
   // test params
   const holdTime = Math.floor(new Date().getTime() / 1000) + 24 * 60 * 60 * 7;
@@ -71,8 +72,10 @@ async function main() {
   // print result
   console.log(`⭐️⭐️Depoly success.
   Admin Address: ${admin_address}
+  Proxy Admin: ${proxyAdmin.address}
   Event Address: ${event_implement_address}
-  Test Event Proxy Address: ${test_proxy_address}`);
+  Test Event Proxy Address: ${test_proxy_address}
+  Block Number:${blockNumber}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
